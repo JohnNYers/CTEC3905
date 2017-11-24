@@ -1,0 +1,38 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: arial;
+}
+
+header {
+  height: 60vh;
+  background: #1abc9c;
+}
+
+header select {
+  color: white;
+  background: #1abc9c;
+  font-size: 2em;
+  text-align-last: right;
+  padding: 1em;
+  border-style: none;
+}
+
+header>div{
+  border-bottom: 2px #fff solid;
+  width: 250px;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+h1 {
+  font-style: italic;
+  margin-left: .2em;
+}
+
+article>h2{
+  margin-left: 1em;
+  padding: 2px;
+  border-bottom: 2px #444 solid;
+  font-size: 1em;
+}
