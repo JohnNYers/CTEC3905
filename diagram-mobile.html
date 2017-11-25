@@ -3,6 +3,7 @@
 
 <head>
   <link rel="stylesheet" href="styles/mobile-diagram.css">
+  <link rel="stylesheet" href="styles/diagram.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
@@ -21,6 +22,17 @@
         <li>Humidity</li>
       </ul>
     </div>
+    <svg id="diagram" viewBox="0 0 800 700">
+      <line class="axis" x1="50" y1="200" x2="50" y2="650"/>
+      <line class="axis" x1="50" y1="650" x2="750" y2="650"/>
+      <text x="50" y="680">0</text>
+      <text x="50" y="180" class="axis-val">hPa</text>
+      <g>
+        <polyline id="diagram-path" points="">
+          <animate begin="indefinite" attributeName="points" dur="2s" to="" repeatCount="1" fill="freeze"></animate>
+        </polyline>
+      </g>
+    </svg>
   </header>
   <section>
     <h1>latest data
@@ -108,6 +120,7 @@
       <div> <span class="value"></span> <span>km/h</span></div>
     </article>
   </section>
+  <script src="js/json.js"></script>
   <script src="js/mobile-select.js"></script>
   <script src="js/data.js"></script>
 </body>

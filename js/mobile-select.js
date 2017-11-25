@@ -16,7 +16,7 @@
       selected = li[i];
       dropdown.classList.remove("active");
       mval.classList.remove("active");
-    })
+    });
   }
 
 }();

@@ -10,6 +10,7 @@ header {
 }
 
 header>div{
+  position: absolute;
   font-size: 2em;
   color: white;
   padding: .5em 0em 0em 1em;

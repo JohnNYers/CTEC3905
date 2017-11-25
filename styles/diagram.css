@@ -1,0 +1,25 @@
+header svg{
+  width: 100%;
+  height: 60vh;
+}
+
+.axis {
+  stroke-width: 5px;
+  stroke: white;
+}
+
+text {
+  font-size: 1.5em;
+  fill: white;
+  text-anchor: middle;
+}
+
+.axis-val {
+  font-style: italic;
+}
+
+polyline {
+  stroke: #f39c12;
+  stroke-width: 10px;
+  fill: transparent;
+}
