@@ -9,19 +9,10 @@ header {
   background: #1abc9c;
 }
 
-header select {
-  color: white;
-  background: #1abc9c;
-  font-size: 2em;
-  text-align-last: right;
-  padding: 1em;
-  border-style: none;
-}
-
 header>div{
   font-size: 2em;
   color: white;
-  padding: 1em 0em 0em 1em;
+  padding: .5em 0em 0em 1em;
   width: 300px;
   
 }
@@ -51,7 +42,7 @@ header>div{
   transform: translateY(-80px) rotateX(90deg) ;
 }
 
-ul::before {
+#dd ul::before {
   content: '';
   width: 0px;
   height: 0px;
@@ -67,10 +58,6 @@ ul::before {
   margin: 2px;
 }
 
-#dd li.no-border {
-  border-bottom-style: none;
-}
-
 .dd-select{
   display: none;
 }
@@ -79,6 +66,14 @@ h1 {
   font-style: italic;
   margin-left: .2em;
 }
+#last-time {
+  font-style: normal;
+  font-weight: 100;
+}
+
+article {
+  color: grey;
+}
 
 article>h2{
   margin-left: 1em;
@@ -86,3 +81,42 @@ article>h2{
   border-bottom: 2px #444 solid;
   font-size: 1em;
 }
+
+svg {
+  width: 20px;
+  height: 20px;
+}
+#pressure svg {
+  fill: #2c3e50;
+}
+
+#temperature svg {
+  fill: #e74c3c;
+}
+
+#light svg {
+  fill: #f1c40f;
+}
+
+#gamma svg {
+  fill: #95a5a6;
+}
+
+#humidity svg {
+  fill: #3498db;
+}
+
+#windd svg {
+  fill: black;
+}
+
+#windv svg {
+  fill: black;
+}
+
+article > div {
+  text-align: right;
+  font-size: 2em;
+  margin-right: 1em;
+}
+
