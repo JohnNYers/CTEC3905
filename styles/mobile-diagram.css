@@ -19,12 +19,62 @@ header select {
 }
 
 header>div{
-  border-bottom: 2px #fff solid;
-  width: 250px;
-  text-align: center;
-  margin: 0 auto;
-  padding-top: 1em;
+  font-size: 2em;
+  color: white;
+  padding: 1em 0em 0em 1em;
+  width: 300px;
+  
 }
+
+#dd-value {
+  display: inline-block;
+  padding: .5em;
+  border-radius: 10px;
+}
+
+#dd-value.active{
+  box-shadow: 5px 5px 40px 5px rgba(0,0,0,0.1);
+}
+#dd ul.active{
+  visibility: visible;
+  transform: translateY(20px) rotateX(0deg);
+}
+#dd ul{
+  transform: translateY(20px);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  visibility: hidden;
+  background: white;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(-80px) rotateX(90deg) ;
+}
+
+ul::before {
+  content: '';
+  width: 0px;
+  height: 0px;
+  top: -40px;
+  left: 40px;
+  position: absolute;
+  border: 20px solid transparent;
+  border-bottom: 20px solid #fff;
+}
+#dd li {
+  background: #16a085;
+  padding: .5em 1em;
+  margin: 2px;
+}
+
+#dd li.no-border {
+  border-bottom-style: none;
+}
+
+.dd-select{
+  display: none;
+}
+
 h1 {
   font-style: italic;
   margin-left: .2em;
