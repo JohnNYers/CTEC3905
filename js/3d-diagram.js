@@ -4,10 +4,11 @@ function parse3d()
 {
   let max = 0;
   let min = Infinity;
+  let otime = new Date(d3data[0].datum).getTime();
   for (let i = 0; i < d3data.length; ++i) {
-    points[i*3] = new Date(d3data[i].datum).getTime()%86400000/86400000 -0.5;
-    points[i*3+1] = ((new Date(d3data[i].datum).getTime()-new Date(d3data[0].datum).getTime())
-    /86400000)/7-.5;
+    let tdif = new Date(d3data[i].datum).getTime() - otime;
+    points[i*3] = tdif%86400000/86400000 -0.5;
+    points[i*3+1] = parseInt(tdif/86400000)/7-.5;
     let t = parseFloat(d3data[i]["akku"]);
     if(t > max) max = t;
     if(t < min) min = t;
@@ -88,6 +89,8 @@ function parse3d()
     gl.viewport(0,0,canvas.width,canvas.height);
     gl.drawArrays(gl.POINTS, 0, parseInt(points.length/3));
   };
+  
+  
   let interval = setInterval(function(){y+=dif;drawScene();}, 50);
   drawScene();
   let timer = null;
