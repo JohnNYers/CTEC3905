@@ -12,17 +12,26 @@
     </section>
     
     <script id="vshader" type="x-shader/x-vertex">
+    precision mediump float;
     attribute vec3 a_position;
-
+    attribute vec4 a_color;
+    uniform mat4 rot_matrix;
+    
+    varying vec4 vColor;
     void main() {
-      gl_Position = vec4(a_position, 1.0);
+      gl_Position = rot_matrix * vec4(a_position, 1.0);
+      vColor = a_color;
+      gl_PointSize = 10.0;
     }
     </script>
     <script id="fshader" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
     void main() {
-      gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);
+      gl_FragColor = vColor;
     }
     </script>
+    <script src="js/json.js"></script>
     <script src="js/3d-diagram.js"></script>
   </body>
 </html>
