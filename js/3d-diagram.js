@@ -2,19 +2,46 @@ let points = [];
 let colors = [];
 function parse3d()
 {
+  let max = 0;
+  let min = Infinity;
   for (let i = 0; i < d3data.length; ++i) {
     points[i*3] = new Date(d3data[i].datum).getTime()%86400000/86400000 -0.5;
     points[i*3+1] = ((new Date(d3data[i].datum).getTime()-new Date(d3data[0].datum).getTime())
     /86400000)/7-.5;
-    let t = parseFloat(d3data[i]["temperatur"])/10;
+    let t = parseFloat(d3data[i]["akku"]);
+    if(t > max) max = t;
+    if(t < min) min = t;
     points[i*3+2] = t;
-    colors[i*4] = t;
-    colors[i*4+1] = t;
-    colors[i*4+2] = t;
+  }
+  for(let i = 0; i < points.length/3; ++i) {
+    let temp = (points[i*3+2] -min)/(max-min);
+    points[i*3+2] = temp-.5;
+    getcolor(temp, i);
+  }
+  function getcolor(c, i) {
+    let indexes = [
+      [0,0,1], //blue
+      [0,1,1], //cyan
+      [0,1,0], //green
+      [1,1,0], //yellow
+      [1,0,0] //red
+    ];
+    
+    let f = 0, ilow, ihigh;
+    if(c <= 0) ilow=ihigh=0;
+    else if(c>=1) ilow=ihigh=indexes.length-1;
+    else {
+      c = c*(indexes.length-1);
+      ilow = parseInt(c);
+      f = c-ilow;
+      ihigh = ilow +1;
+      
+    }
+    for(let j = 0; j < 3; ++j) {
+      colors[i*4 + j] = (indexes[ihigh][j] - indexes[ilow][j]) * f + indexes[ilow][j];
+    }
     colors[i*4+3] = 1;
   }
-  
-  
 }
 
 !function init() {
@@ -24,8 +51,6 @@ function parse3d()
   if(!gl) return;
   let program = shaderprogram(gl, ["vshader", "fshader"]);
   gl.useProgram(program);
-  console.log(points);
-  console.log(colors);
   
   let vertex_buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
@@ -40,29 +65,10 @@ function parse3d()
                0,1,0,0,
                0,0,1,0,
                0,0,0,1];
-  let x=y=0;
-  let dif = 0.001;
-  document.addEventListener("keydown", function (e) {
-    console.log(e.keyCode);
-    switch(e.keyCode) {
-      case 38: //UP
-        x+=dif;
-        drawScene();
-        break;
-      case 40: //DOWN
-        x-=dif;
-        drawScene();
-        break;
-      case 37: //LEFT
-        y-=dif;
-        drawScene();
-        break;
-      case 39: //RIGHT
-        y+=dif;
-        drawScene();
-        break;
-    }
-  });
+  let x=-60,y=0;
+  let dif = 2;
+  
+  
   
   function drawScene() {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
@@ -74,7 +80,6 @@ function parse3d()
     var col = gl.getAttribLocation(program, "a_color");
     gl.vertexAttribPointer(col, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(col);
-    console.log(mul(rotationX(x),stdmatrix));
     gl.uniformMatrix4fv(matrixRotation, false, mul(rotationX(x),mul(rotationY(y),stdmatrix)));
     
     gl.clearColor(0.5, 0.2, 0.5, 0.9);
@@ -83,11 +88,42 @@ function parse3d()
     gl.viewport(0,0,canvas.width,canvas.height);
     gl.drawArrays(gl.POINTS, 0, parseInt(points.length/3));
   };
+  let interval = setInterval(function(){y+=dif;drawScene();}, 50);
   drawScene();
+  let timer = null;
+  document.addEventListener("keydown", function (e) {
+    function callback() {
+      clearInterval(interval);
+      if(timer) clearTimeout(timer);
+      timer = setTimeout(function (){
+        interval = setInterval(function(){y+=dif;drawScene();}, 50);
+      }, 2000);
+      
+      drawScene();
+    };
+    switch(e.keyCode) {
+      case 38: //UP
+        x+=dif;
+        callback();
+        break;
+      case 40: //DOWN
+        x-=dif;
+        callback();
+        break;
+      case 37: //LEFT
+        y-=dif;
+        callback();
+        break;
+      case 39: //RIGHT
+        y+=dif;
+        callback();
+        break;
+    }
+  });
 }();
 
 function r2d(r) {
-  return r*180/Math.PI;
+  return r/180*Math.PI;
 }
 
 function rotationX(angle) {
