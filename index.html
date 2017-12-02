@@ -6,35 +6,23 @@
     
   </head>
   <body>
-    <header>
-        <img src="images/logo.png" alt="logo"/>
-        <div id="mobile-menu-icon">
-        </div>
-        <nav id="menu">
-          <a href="#">Electronics</a>
-          <a href="#">Informatics</a>
-          <a href="#">Mechanics</a>
-          <a href="#">Created by</a>
-        </nav>
-    </header>
-    <section id="overview">
-      <h1>Weatherstation Maulburg</h1>
-    </section>
-    <section class="current-values">
-    </section>
-    <section class="diagrams">
-      <a href="diagram-mobile.html">SHOW DIAGRAMS</a>
-    </section>
-    <section class="max-values">
-    </section>
-    <footer>
-    </footer>
+    
     <section>
-      <canvas id="3d-canvas"></canvas>
+      <canvas id="3d-canvas" width="1000" height="1000"></canvas>
     </section>
-    <script src="js/vshader.glslv" type="x-shader/x-vertex"></script>
-    <script src="js/vshader.glslf" type="x-shader/x-fragment"></script>
+    
+    <script id="vshader" type="x-shader/x-vertex">
+    attribute vec3 a_position;
+
+    void main() {
+      gl_Position = vec4(a_position, 1.0);
+    }
+    </script>
+    <script id="fshader" type="x-shader/x-fragment">
+    void main() {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);
+    }
+    </script>
     <script src="js/3d-diagram.js"></script>
-    <script src="js/mobile-menu.js"></script>
   </body>
 </html>
