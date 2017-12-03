@@ -121,7 +121,13 @@ function parse3d()
   parse3d();
   let canvas = document.getElementById("3d-canvas");
   let gl = canvas.getContext("webgl");
-  if(!gl) return;
+  if(!gl) {
+    gl = canvas.getContext("experimental-webgl");
+    if(!gl) {
+      alert("WebGL is not supported.")
+      return;
+    }
+  }
   let program = shaderprogram(gl, ["vshader", "fshader"]);
   gl.useProgram(program);
   
