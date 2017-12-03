@@ -162,6 +162,7 @@ function parse3d()
 
     gl.viewport(0,0,canvas.width,canvas.height);
     gl.drawArrays(gl.LINES, 0, parseInt(points.length/3));
+    
   };
   
   
@@ -182,14 +183,18 @@ function parse3d()
   });
   let touchpos;
   canvas.addEventListener("touchstart", function(e) {
-    touchpos = [e.originalEvent.touches[0].clientX, e.originalEvent.touches[0].clientY]
+    touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
+    e.preventDefault();
   });
   canvas.addEventListener("touchmove", function(e) {
-    touchpos[0] = e.originalEvent.touches[0].clientX - touchpos[0];
-    touchpos[1] = e.originalEvent.touches[0].clientY - touchpos[1];
-    y += touchpos[0]/200*dif;
-    x += touchpos[1]/200*dif;
+    let dx = e.changedTouches[0].clientX - touchpos[0];
+    let dy = e.changedTouches[0].clientY - touchpos[1];
+    touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+    console.log(touchpos);
+    y += dx/2*dif;
+    x += dy/2*dif;
     drawScene();
+    e.preventDefault();
   });
                           
   
