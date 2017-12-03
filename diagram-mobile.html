@@ -11,7 +11,7 @@
 <body>
   <header>
 
-    <div id="dd">
+    <nav id="dd">
       <span id="dd-value">Temperature</span>
       <ul>
         <li>Light</li>
@@ -21,18 +21,25 @@
         <li>Wind</li>
         <li>Humidity</li>
       </ul>
+    </nav>
+    <nav class="switcher">
+      3D
+    </nav>
+    <div id="container">
+      <svg id="diagram2d" class="diagram " viewBox="0 0 800 700">
+        <line class="axis" x1="50" y1="200" x2="50" y2="650"/>
+        <line class="axis" x1="50" y1="650" x2="750" y2="650"/>
+        <text x="50" y="680">0</text>
+        <text x="50" y="180" class="axis-val">hPa</text>
+        <g>
+          <polyline id="diagram-path" points="">
+            <animate begin="indefinite" attributeName="points" dur="2s" to="" repeatCount="1" fill="freeze"></animate>
+          </polyline>
+        </g>
+      </svg>
+      
+        <canvas id="diagram3d" class="diagram active" width="1000" height="1000"></canvas>
     </div>
-    <svg id="diagram" viewBox="0 0 800 700">
-      <line class="axis" x1="50" y1="200" x2="50" y2="650"/>
-      <line class="axis" x1="50" y1="650" x2="750" y2="650"/>
-      <text x="50" y="680">0</text>
-      <text x="50" y="180" class="axis-val">hPa</text>
-      <g>
-        <polyline id="diagram-path" points="">
-          <animate begin="indefinite" attributeName="points" dur="2s" to="" repeatCount="1" fill="freeze"></animate>
-        </polyline>
-      </g>
-    </svg>
   </header>
   <section>
     <h1>latest data
@@ -123,6 +130,28 @@
   <script src="js/json.js"></script>
   <script src="js/mobile-select.js"></script>
   <script src="js/data.js"></script>
+  <script id="vshader" type="x-shader/x-vertex">
+    precision mediump float;
+    attribute vec3 a_position;
+    attribute vec4 a_color;
+    uniform mat4 rot_matrix;
+    uniform mat4 proj_matrix;
+    varying vec4 vColor;
+    void main() {
+      gl_Position = proj_matrix * rot_matrix * vec4(a_position, 1.0);
+      vColor = a_color;
+      gl_PointSize = 5.0;
+    }
+    </script>
+    <script id="fshader" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
+    void main() {
+      gl_FragColor = vColor;
+    }
+    </script>
+    <script src="js/3d-diagram.js"></script>
+    <script src="js/diagram-handler.js"></script>
 </body>
 
 </html>

@@ -7,21 +7,23 @@ body {
 header {
   height: 60vh;
   background: #1abc9c;
+  color: white;
 }
 
-header>div{
+#dd{
   position: absolute;
   font-size: 2em;
-  color: white;
   padding: .5em 0em 0em 1em;
   width: 300px;
-  
+  pointer-events: none;
 }
 
 #dd-value {
   display: inline-block;
-  padding: .5em;
+  padding: .2em 1em;
   border-radius: 10px;
+  cursor: pointer;
+  pointer-events: all;
 }
 
 #dd-value.active{
@@ -30,6 +32,7 @@ header>div{
 #dd ul.active{
   visibility: visible;
   transform: translateY(20px) rotateX(0deg);
+  pointer-events: all;
 }
 #dd ul{
   transform: translateY(20px);
@@ -40,7 +43,8 @@ header>div{
   visibility: hidden;
   background: white;
   transition: transform 0.3s ease-in-out;
-  transform: translateY(-80px) rotateX(90deg) ;
+  transform: translateY(-80px) rotateX(90deg);
+  
 }
 
 #dd ul::before {
@@ -121,3 +125,16 @@ article > div {
   margin-right: 1em;
 }
 
+.switcher {
+  position: absolute;
+  border-style: dotted;
+  padding: .5em;
+  cursor: pointer;
+  right:20px;
+  top: 20px;
+  transition: all .1s ease-in-out;
+}
+.switcher:hover {
+  transform: scale(1.1);
+  background-color: rgba(1,1,1,.1);
+}

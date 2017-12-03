@@ -1,3 +1,5 @@
+
+
 ! function () {
   let diagram = {
     position: {
@@ -32,7 +34,7 @@
       ]
     }
   };
-  diagram.axis = document.getElementById("diagram").getElementsByClassName("axis");
+  diagram.axis = document.getElementById("diagram2d").getElementsByClassName("axis");
   diagram.width = parseInt(diagram.axis[1].getAttribute("x2")) - parseInt(diagram.axis[1].getAttribute("x1"));
 
   diagram.height = parseInt(diagram.axis[0].getAttribute("y2")) - parseInt(diagram.axis[0].getAttribute("y1"));
@@ -48,20 +50,19 @@
     diagram.anim.setAttribute("from", diagram.anim.getAttribute("to"));
   }, false);
   //diagram.d("M10 80 Q 52.5 10, 95 80 T 180 80 T 290 80");
-  
+
   for (let i = 0; i < ddata.length; ++i) {
     let date = new Date(ddata[i].datum).getTime();
     diagram.v.datum[i] = date;
     if (diagram.v.dmax < date) diagram.v.dmax = date;
     if (diagram.v.dmin > date) diagram.v.dmin = date;
-    for(let j = 0; j < diagram.v.method.length; ++j)
-      {
-        let tmp = parseFloat(ddata[i][diagram.v.method[j].name]);
-        diagram.v.method[j].data[i] = tmp;
-        if (diagram.v.method[j].max < tmp) diagram.v.method[j].max = tmp;
-        if (diagram.v.method[j].min > tmp) diagram.v.method[j].min = tmp;
-      }
-    
+    for (let j = 0; j < diagram.v.method.length; ++j) {
+      let tmp = parseFloat(ddata[i][diagram.v.method[j].name]);
+      diagram.v.method[j].data[i] = tmp;
+      if (diagram.v.method[j].max < tmp) diagram.v.method[j].max = tmp;
+      if (diagram.v.method[j].min > tmp) diagram.v.method[j].min = tmp;
+    }
+
   }
 
 
@@ -77,7 +78,7 @@
     //this.d(str);
     this.anim.setAttribute("from", str);
   }
-  
+
   diagram.con = function (e, i) {
     return ` ${(this.v.datum[i]-this.v.dmin)*this.width/(this.v.dmax - this.v.dmin) + this.position.x},${this.position.y - (e.max-e.min !== 0?(e.data[i]-e.min)*this.height/(e.max - e.min):0)}`;
   }
@@ -92,12 +93,12 @@
   }
 
   diagram.init();
-  let c=0;
-  setInterval(function(){ 
-    if(c === diagram.v.method.length) c = 0;
+  let c = 0;
+  setInterval(function () {
+    if (c === diagram.v.method.length) c = 0;
     diagram.build(diagram.v.method[c++]);
   }, 3000);
-  
+
   console.log(diagram.v);
 }();
 

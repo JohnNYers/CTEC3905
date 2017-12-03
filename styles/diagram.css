@@ -1,6 +1,9 @@
-header svg{
-  width: 100%;
-  height: 60vh;
+.diagram {
+  display: none;
+  width: 80%;
+  margin: 0 auto;
+  height: 40vh;
+  transition: all 2s ease-in-out;
 }
 
 .axis {
@@ -22,4 +25,16 @@ polyline {
   stroke: #f39c12;
   stroke-width: 10px;
   fill: transparent;
+}
+
+#container .active{
+  display: block;
+}
+#container{
+  display: block;
+}
+#container {
+  padding-top: 90px;
+  width: 100%;
+  overflow-x: hidden;
 }

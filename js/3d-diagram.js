@@ -148,7 +148,7 @@ function parse3d()
 !function init() {
   parse3d();
   let value = 0;
-  let canvas = document.getElementById("3d-canvas");
+  let canvas = document.getElementById("diagram3d");
   let gl = canvas.getContext("webgl");
   if(!gl) {
     gl = canvas.getContext("experimental-webgl");
@@ -179,17 +179,16 @@ function parse3d()
   
   
   var matrixProjection = gl.getUniformLocation(program, "proj_matrix");
-  let promat = makeproj(Math.PI*.25, canvas.width/canvas.height, 1.5, 3.5);
-  function resizecalc() {
+  let promat = makeproj(Math.PI*.21, canvas.width/canvas.height, 1.5, 3.5);
+  /*function resizecalc() {
     if(gl.canvas.width !== canvas.clientWidth) canvas.width = gl.canvas.clientWidth;
     if(gl.canvas.height !== canvas.clientHeight) canvas.height = gl.canvas.clientHeight;
     drawScene();
   }
   resizecalc();
-  window.addEventListener("resize", resizecalc);
+  window.addEventListener("resize", resizecalc);*/
   
   function drawScene() {
-    
     gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
     var coord = gl.getAttribLocation(program, "a_position");
     gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
@@ -203,7 +202,8 @@ function parse3d()
     
     gl.uniformMatrix4fv(matrixProjection, false, promat);
     
-    gl.clearColor(0.5, 0.2, 0.5, 0.9);
+    //gl.clearColor(0.5, 0.2, 0.5, 0.9);
+    gl.clearColor(.2, .28, .36,1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL); 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
