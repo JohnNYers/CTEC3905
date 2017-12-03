@@ -31,10 +31,15 @@ polyline {
   display: block;
 }
 #container{
+  padding-bottom: 2em;
   display: block;
 }
 #container {
   padding-top: 90px;
   width: 100%;
   overflow-x: hidden;
+}
+#container canvas {
+  border-radius: 10px;
+  box-shadow: 2px 7px 32px -2px rgba(0,0,0,0.75);
 }
