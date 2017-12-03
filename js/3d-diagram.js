@@ -138,7 +138,7 @@ function parse3d()
                0,1,0,0,
                0,0,1,0,
                0,0,0,1];
-  let x=0,y=90;
+  let x=-60,y=90;
   let dif = 2;
   
   
@@ -166,13 +166,19 @@ function parse3d()
   };
   
   
- // let interval = setInterval(function(){y+=dif;drawScene();}, 50);
+  let timer = null;
+  let interval = setInterval(function(){y+=dif;drawScene();}, 50);
   drawScene();
   let mousedown = false;
   canvas.addEventListener("mousedown", function() {
+    clearInterval(interval);
+    if(timer) clearTimeout(timer);
     mousedown = true;
   });
   canvas.addEventListener("mouseup", function() {
+    timer = setTimeout(function (){
+      interval = setInterval(function(){y+=dif;drawScene();}, 50);
+    }, 3000);
     mousedown = false;
   });
   canvas.addEventListener("mousemove", function(e) {
@@ -183,6 +189,8 @@ function parse3d()
   });
   let touchpos;
   canvas.addEventListener("touchstart", function(e) {
+    clearInterval(interval);
+    if(timer) clearTimeout(timer);
     touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
     e.preventDefault();
   });
@@ -196,17 +204,21 @@ function parse3d()
     drawScene();
     e.preventDefault();
   });
+  canvas.addEventListener("touchend", function(e) {
+    timer = setTimeout(function (){
+      interval = setInterval(function(){y+=dif;drawScene();}, 50);
+    }, 3000);
+  });
                           
   
-  let timer = null;
   document.addEventListener("keydown", function (e) {
     function callback() {
-     /* clearInterval(interval);
+      clearInterval(interval);
       if(timer) clearTimeout(timer);
       timer = setTimeout(function (){
         interval = setInterval(function(){y+=dif;drawScene();}, 50);
-      }, 2000);
-      */
+      }, 3000);
+      
       drawScene();
     };
     switch(e.keyCode) {
