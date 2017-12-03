@@ -5,4 +5,5 @@ body {
 canvas {
   width: 100%;
   max-width: 1000px;
+  height: 330px
 }

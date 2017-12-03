@@ -1,5 +1,6 @@
 let points = [];
 let colors = [];
+let numbervalues;
 
 function max(a,b) {return a<b?b:a;}
 function min(a,b) {return a>b?b:a;}
@@ -11,33 +12,37 @@ function distance (a, b, dy) {
 
 function linearize(p) {
   let y = [];
-  for(let j = 0; j < p.length; ++j) {
-    let ls = 0;
-    let rs = 0;
-    for(let i = 0; i < p[j].length; ++i) {
-      if(j > 0) {
-        let d = Infinity; 
-        for(let z = ls; z < p[j-1].length; ++z) {
-          let dd = distance(p[j][i], p[j-1][z], j/7);
-          if(dd <= d) {
-            d = dd;
-            ls = z;
-          }
-          else {
-           
-            break;
-          }
-          y = y.concat([j/7-0.5].concat(p[j][i]));
-          y = y.concat([(j-1)/7-0.5].concat(p[j-1][ls]));
-        }
-      }
-      if(j < p.length-1) {
+  let count = 0;
+  for(let v = 0; v < numbervalues; ++v) {
+    y[v] = [];
+    for(let j = 0; j < p.length; ++j) {
+      let ls = 0;
+      let rs = 0;
+      for(let i = 0; i < p[j][v].length; ++i) {
+        if(j > 0) {
+          let d = Infinity; 
+          for(let z = ls; z < p[j-1][v].length; ++z) {
+            let dd = distance(p[j][0][i], p[j-1][0][z], j/7);
+            if(dd <= d) {
+              d = dd;
+              ls = z;
+            }
+            else {
 
-      }
-       
-      if(i > 0) {
-        y = y.concat([j/7-0.5].concat(p[j][i]));
-        y = y.concat([j/7-0.5].concat(p[j][i-1]));
+              break;
+            }
+            y[v] = y[v].concat([j/7-0.5].concat(p[j][v][i]));
+            y[v] = y[v].concat([(j-1)/7-0.5].concat(p[j-1][v][ls]));
+          }
+        }
+        if(j < p.length-1) {
+
+        }
+
+        if(i > 0) {
+          y[v] = y[v].concat([j/7-0.5].concat(p[j][v][i]));
+          y[v] = y[v].concat([j/7-0.5].concat(p[j][v][i-1]));
+        }
       }
     }
   }
@@ -45,53 +50,76 @@ function linearize(p) {
 }
 
 function smooth(p, e, d, b) {
+  
   if(!d) d = 0.02;
   if(!e) e = 5;
   
   let y = [];
-  for(let i = 0; i < p.length; ++i) {
-    if(y.length > 0) if(p[i][0] - y[y.length-1][0] < d) continue; 
-    let sum = 0;
-    let num = 0;
-    for(let j = max(i-e, 0); j < min(i+e, p.length); ++j) {
-      sum += p[j][1];
-      ++num;
+  for(let v = 0; v < numbervalues; ++v) {
+    y[v] = [];
+    for(let i = 0; i < p[0].length; ++i) {
+      if(y[v].length > 0) if(p[0][i] - y[v][y[v].length-1][0] < d) continue; 
+      let sum = 0;
+      let num = 0;
+      for(let j = max(i-e, 0); j < min(i+e, p[0].length); ++j) {
+        sum += p[1][v][j];
+        ++num;
+      }
+      y[v][y[v].length] = [p[0][i], sum/num];
+      if(sum/num > b[v].max) b[v].max = sum/num;
+      if(sum/num < b[v].min) b[v].min = sum/num;
     }
-    y[y.length] = [p[i][0], sum/num];
-    if(sum/num > b.max) b.max = sum/num;
-    if(sum/num < b.min) b.min = sum/num;
   }
   return y;
 }
 
 function parse3d()
 {
-  let bounds = {min: Infinity,
-               max: 0};
+  function Bound () {
+    this.min=Infinity,
+    this.max=0
+  }
+  numbervalues = 6;
   let otime = new Date(d3data[0].datum).getTime();
-  let p = [[],[],[],[],[],[],[]];
+  let p = [[[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]],
+          [[],[[],[],[],[],[],[]]]];
+  
+ 
+  let bounds = [];
+  for(let i = 0; i < p.length; ++i) bounds[i] = new Bound();
+  
   for (let i = 0; i < d3data.length; ++i) {
     let tdif = new Date(d3data[i].datum).getTime() - otime;
     let index = parseInt(tdif/86400000);
-    p[index][p[index].length] = [];
-    p[index][p[index].length-1][0] = tdif%86400000/86400000 -0.5;
-    let t = parseFloat(d3data[i]["akku"]);
-    p[index][p[index].length-1][1] = t;
+    let c = p[index][0].length;
+    p[index][0].push(tdif%86400000/86400000 -0.5);
+    p[index][1][0].push(parseFloat(d3data[i]["akku"]));
+    p[index][1][1].push(parseFloat(d3data[i]["temperatur"]));
+    p[index][1][2].push(parseFloat(d3data[i]["druck"]));
+    p[index][1][3].push(parseFloat(d3data[i]["licht"]));
+    p[index][1][4].push(parseFloat(d3data[i]["gamma"]));
+    p[index][1][5].push(parseFloat(d3data[i]["akku"]));
   }
-
-  
   
   for(let i = 0; i < p.length; ++i) {
     p[i] = smooth(p[i], 5, 0.005, bounds);
   }
+  
   points = linearize(p);
-  for(let i = 0; i < points.length/3; ++i) {
-    let temp = ((points[i*3+2] -bounds.min)/(bounds.max-bounds.min)).toFixed(5);
-    
-    points[i*3+2] = temp - .5;
-    getcolor(temp, i);
+  for(let j = 0; j < points.length; ++j) {
+    for(let i = 0; i < points[j].length/3; ++i) {
+      let temp = ((points[j][i*3+2] -bounds[j].min)/(bounds[j].max-bounds[j].min)).toFixed(5);
+      points[j][i*3+2] = temp - .5;
+      getcolor(temp, i, j);
+    }
   }
-  function getcolor(c, i) {
+  function getcolor(c, i, v) {
+    if(!colors[v]) colors[v] = [];
     let indexes = [
       [0,0,1], //blue
       [0,1,1], //cyan
@@ -111,14 +139,15 @@ function parse3d()
       
     }
     for(let j = 0; j < 3; ++j) {
-      colors[i*4 + j] = (indexes[ihigh][j] - indexes[ilow][j]) * f + indexes[ilow][j];
+      colors[v][i*4 + j] = (indexes[ihigh][j] - indexes[ilow][j]) * f + indexes[ilow][j];
     }
-    colors[i*4+3] = 1;
+    colors[v][i*4+3] = 1;
   }
 }
 
 !function init() {
   parse3d();
+  let value = 0;
   let canvas = document.getElementById("3d-canvas");
   let gl = canvas.getContext("webgl");
   if(!gl) {
@@ -133,11 +162,11 @@ function parse3d()
   
   let vertex_buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points[value]), gl.STATIC_DRAW);
   
   let vertex_color_buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertex_color_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors[value]), gl.STATIC_DRAW);
   
   var matrixRotation = gl.getUniformLocation(program, "rot_matrix");
   let stdmatrix = [1,0,0,0,
@@ -151,10 +180,16 @@ function parse3d()
   
   var matrixProjection = gl.getUniformLocation(program, "proj_matrix");
   let promat = makeproj(Math.PI*.25, canvas.width/canvas.height, 1.5, 3.5);
-  
-  
+  function resizecalc() {
+    if(gl.canvas.width !== canvas.clientWidth) canvas.width = gl.canvas.clientWidth;
+    if(gl.canvas.height !== canvas.clientHeight) canvas.height = gl.canvas.clientHeight;
+    drawScene();
+  }
+  resizecalc();
+  window.addEventListener("resize", resizecalc);
   
   function drawScene() {
+    
     gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
     var coord = gl.getAttribLocation(program, "a_position");
     gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
@@ -174,7 +209,7 @@ function parse3d()
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.viewport(0,0,canvas.width,canvas.height);
-    gl.drawArrays(gl.LINES, 0, parseInt(points.length/3));
+    gl.drawArrays(gl.LINES, 0, parseInt(points[value].length/3));
     
   };
   
