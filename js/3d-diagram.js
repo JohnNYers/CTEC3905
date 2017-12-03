@@ -82,7 +82,7 @@ function parse3d()
   
   
   for(let i = 0; i < p.length; ++i) {
-    p[i] = smooth(p[i], 5, 0.01, bounds);
+    p[i] = smooth(p[i], 5, 0.005, bounds);
   }
   points = linearize(p);
   for(let i = 0; i < points.length/3; ++i) {
@@ -138,8 +138,13 @@ function parse3d()
                0,1,0,0,
                0,0,1,0,
                0,0,0,1];
-  let x=-60,y=90;
+  let x=-90,y=0;
   let dif = 2;
+  
+  
+  
+  var matrixProjection = gl.getUniformLocation(program, "proj_matrix");
+  let promat = makeproj(Math.PI*.25, canvas.width/canvas.height, 1.5, 3.5);
   
   
   
@@ -153,7 +158,9 @@ function parse3d()
     var col = gl.getAttribLocation(program, "a_color");
     gl.vertexAttribPointer(col, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(col);
-    gl.uniformMatrix4fv(matrixRotation, false, mul(rotationX(x),mul(rotationY(y),stdmatrix)));
+    gl.uniformMatrix4fv(matrixRotation, false, mul(translate(0,0,-2.5), mul(rotationX(x),mul(rotationY(y),stdmatrix))));
+    
+    gl.uniformMatrix4fv(matrixProjection, false, promat);
     
     gl.clearColor(0.5, 0.2, 0.5, 0.9);
     gl.enable(gl.DEPTH_TEST);
@@ -198,7 +205,6 @@ function parse3d()
     let dx = e.changedTouches[0].clientX - touchpos[0];
     let dy = e.changedTouches[0].clientY - touchpos[1];
     touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
-    console.log(touchpos);
     y += dx/2*dif;
     x += dy/2*dif;
     drawScene();
@@ -260,11 +266,32 @@ function rotationY(angle) {
   let c = Math.cos(r2d(angle));
   let s = Math.sin(r2d(angle));
   return [
-      c, -s, 0, 0,
-      s, c, 0, 0,
+      c, s, 0, 0,
+      -s, c, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1,
     ];
+}
+
+function translate(x,y,z) {
+  return [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      x, y, z, 1,
+    ];
+}
+
+function makeproj(fov, aspectRatio, near, far) {
+  let f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
+  let rangeInv = 1 / (near - far);
+ 
+  return [
+    f / aspectRatio, 0,                          0,   0,
+    0,               f,                          0,   0,
+    0,               0,    (near + far) * rangeInv,  -1,
+    0,               0,  near * far * rangeInv * 2,   0
+  ];
 }
 
 function mul (a, b) {
