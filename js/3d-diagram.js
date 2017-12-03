@@ -1,22 +1,94 @@
 let points = [];
 let colors = [];
+
+function max(a,b) {return a<b?b:a;}
+function min(a,b) {return a>b?b:a;}
+
+function distance (a, b, dy) {
+  let dx = a[0] - b[0];
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+function linearize(p) {
+  let y = [];
+  for(let j = 0; j < p.length; ++j) {
+    let ls = 0;
+    let rs = 0;
+    for(let i = 0; i < p[j].length; ++i) {
+      if(j > 0) {
+        let d = Infinity; 
+        for(let z = ls; z < p[j-1].length; ++z) {
+          let dd = distance(p[j][i], p[j-1][z], j/7);
+          if(dd <= d) {
+            d = dd;
+            ls = z;
+          }
+          else {
+           
+            break;
+          }
+          y = y.concat([j/7-0.5].concat(p[j][i]));
+          y = y.concat([(j-1)/7-0.5].concat(p[j-1][ls]));
+        }
+      }
+      if(j < p.length-1) {
+
+      }
+       
+      if(i > 0) {
+        y = y.concat([j/7-0.5].concat(p[j][i]));
+        y = y.concat([j/7-0.5].concat(p[j][i-1]));
+      }
+    }
+  }
+  return y;
+}
+
+function smooth(p, e, d, b) {
+  if(!d) d = 0.02;
+  if(!e) e = 5;
+  
+  let y = [];
+  for(let i = 0; i < p.length; ++i) {
+    if(y.length > 0) if(p[i][0] - y[y.length-1][0] < d) continue; 
+    let sum = 0;
+    let num = 0;
+    for(let j = max(i-e, 0); j < min(i+e, p.length); ++j) {
+      sum += p[j][1];
+      ++num;
+    }
+    y[y.length] = [p[i][0], sum/num];
+    if(sum/num > b.max) b.max = sum/num;
+    if(sum/num < b.min) b.min = sum/num;
+  }
+  return y;
+}
+
 function parse3d()
 {
-  let max = 0;
-  let min = Infinity;
+  let bounds = {min: Infinity,
+               max: 0};
   let otime = new Date(d3data[0].datum).getTime();
+  let p = [[],[],[],[],[],[],[]];
   for (let i = 0; i < d3data.length; ++i) {
     let tdif = new Date(d3data[i].datum).getTime() - otime;
-    points[i*3] = tdif%86400000/86400000 -0.5;
-    points[i*3+1] = parseInt(tdif/86400000)/7-.5;
+    let index = parseInt(tdif/86400000);
+    p[index][p[index].length] = [];
+    p[index][p[index].length-1][0] = tdif%86400000/86400000 -0.5;
     let t = parseFloat(d3data[i]["akku"]);
-    if(t > max) max = t;
-    if(t < min) min = t;
-    points[i*3+2] = t;
+    p[index][p[index].length-1][1] = t;
   }
+
+  
+  
+  for(let i = 0; i < p.length; ++i) {
+    p[i] = smooth(p[i], 5, 0.01, bounds);
+  }
+  points = linearize(p);
   for(let i = 0; i < points.length/3; ++i) {
-    let temp = (points[i*3+2] -min)/(max-min);
-    points[i*3+2] = temp-.5;
+    let temp = ((points[i*3+2] -bounds.min)/(bounds.max-bounds.min)).toFixed(5);
+    
+    points[i*3+2] = temp - .5;
     getcolor(temp, i);
   }
   function getcolor(c, i) {
@@ -66,7 +138,7 @@ function parse3d()
                0,1,0,0,
                0,0,1,0,
                0,0,0,1];
-  let x=-60,y=0;
+  let x=0,y=90;
   let dif = 2;
   
   
@@ -84,24 +156,52 @@ function parse3d()
     gl.uniformMatrix4fv(matrixRotation, false, mul(rotationX(x),mul(rotationY(y),stdmatrix)));
     
     gl.clearColor(0.5, 0.2, 0.5, 0.9);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL); 
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.viewport(0,0,canvas.width,canvas.height);
-    gl.drawArrays(gl.POINTS, 0, parseInt(points.length/3));
+    gl.drawArrays(gl.LINES, 0, parseInt(points.length/3));
   };
   
   
-  let interval = setInterval(function(){y+=dif;drawScene();}, 50);
+ // let interval = setInterval(function(){y+=dif;drawScene();}, 50);
   drawScene();
+  let mousedown = false;
+  canvas.addEventListener("mousedown", function() {
+    mousedown = true;
+  });
+  canvas.addEventListener("mouseup", function() {
+    mousedown = false;
+  });
+  canvas.addEventListener("mousemove", function(e) {
+    if(!mousedown) return;
+    y += e.movementX/2*dif;
+    x += e.movementY/2*dif;
+    drawScene();
+  });
+  let touchpos;
+  canvas.addEventListener("touchstart", function(e) {
+    touchpos = [e.originalEvent.touches[0].clientX, e.originalEvent.touches[0].clientY]
+  });
+  canvas.addEventListener("touchmove", function(e) {
+    touchpos[0] = e.originalEvent.touches[0].clientX - touchpos[0];
+    touchpos[1] = e.originalEvent.touches[0].clientY - touchpos[1];
+    y += touchpos[0]/200*dif;
+    x += touchpos[1]/200*dif;
+    drawScene();
+  });
+                          
+  
   let timer = null;
   document.addEventListener("keydown", function (e) {
     function callback() {
-      clearInterval(interval);
+     /* clearInterval(interval);
       if(timer) clearTimeout(timer);
       timer = setTimeout(function (){
         interval = setInterval(function(){y+=dif;drawScene();}, 50);
       }, 2000);
-      
+      */
       drawScene();
     };
     switch(e.keyCode) {
