@@ -14,12 +14,13 @@
     <nav id="dd">
       <span id="dd-value">Temperature</span>
       <ul>
+        <li class="dd-select">Temperature</li>
         <li>Light</li>
         <li>Pressure</li>
-        <li class="dd-select">Temperature</li>
         <li>Gamma</li>
         <li>Wind</li>
         <li>Humidity</li>
+        <li>Battery</li>
       </ul>
     </nav>
     <nav class="switcher">
@@ -33,7 +34,7 @@
         <text x="50" y="180" class="axis-val">hPa</text>
         <g>
           <polyline id="diagram-path" points="">
-            <animate begin="indefinite" attributeName="points" dur="2s" to="" repeatCount="1" fill="freeze"></animate>
+            <animate begin="indefinite" attributeName="points" dur=".2s" to="" repeatCount="1" fill="freeze"></animate>
           </polyline>
         </g>
       </svg>

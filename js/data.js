@@ -1,6 +1,6 @@
 
-
-! function () {
+let diagram2dhandler;
+!function () {
   let diagram = {
     position: {
       x: 0,
@@ -15,13 +15,14 @@
           max: 0,
           min: Infinity,
           data: []
+        
         }, {
-          "name": "druck",
+          "name": "licht",
           max: 0,
           min: Infinity,
           data: []
         }, {
-          "name": "licht",
+          "name": "druck",
           max: 0,
           min: Infinity,
           data: []
@@ -30,6 +31,27 @@
           max: 0,
           min: Infinity,
           data: []
+        },
+               {
+          "name": "windgeschwindigkeit",
+          max: 0,
+          min: Infinity,
+          data: []
+        
+        },
+               {
+          "name": "feuchte",
+          max: 0,
+          min: Infinity,
+          data: []
+        
+        },
+               {
+          "name": "akku",
+          max: 0,
+          min: Infinity,
+          data: []
+        
         }
       ]
     }
@@ -49,25 +71,19 @@
   diagram.anim.addEventListener("endEvent", function () {
     diagram.anim.setAttribute("from", diagram.anim.getAttribute("to"));
   }, false);
-  //diagram.d("M10 80 Q 52.5 10, 95 80 T 180 80 T 290 80");
 
-  for (let i = 0; i < ddata.length; ++i) {
-    let date = new Date(ddata[i].datum).getTime();
+  for (let i = 0; i < d3data.length; ++i) {
+    let date = new Date(d3data[i].datum).getTime();
     diagram.v.datum[i] = date;
     if (diagram.v.dmax < date) diagram.v.dmax = date;
     if (diagram.v.dmin > date) diagram.v.dmin = date;
     for (let j = 0; j < diagram.v.method.length; ++j) {
-      let tmp = parseFloat(ddata[i][diagram.v.method[j].name]);
+      let tmp = parseFloat(d3data[i][diagram.v.method[j].name]);
       diagram.v.method[j].data[i] = tmp;
       if (diagram.v.method[j].max < tmp) diagram.v.method[j].max = tmp;
       if (diagram.v.method[j].min > tmp) diagram.v.method[j].min = tmp;
     }
 
-  }
-
-
-  let testdata = {
-    data: [[10, 80], [52.5, 10], [95, 80], [180, 80], [290, 80]]
   }
 
   diagram.init = function () {
@@ -86,41 +102,21 @@
   diagram.build = function (e) {
     let str = "";
     for (let i = 0; i < this.v.datum.length; ++i) {
-      str += this.con(e, i);
+      str += this.con(diagram.v.method[e], i);
     }
     this.anim.setAttribute("to", str);
     this.anim.beginElement();
   }
 
   diagram.init();
-  let c = 0;
-  setInterval(function () {
-    if (c === diagram.v.method.length) c = 0;
-    diagram.build(diagram.v.method[c++]);
-  }, 3000);
-
-  console.log(diagram.v);
+  diagram.build(0);
+  diagram2dhandler = diagram;
 }();
 
 
-
-
-let data = {
-  "id": "33360",
-  "datum": "2017-11-25 05:30:20",
-  "temperatur": "10.68",
-  "druck": "1008.88",
-  "licht": "0",
-  "feuchte": "-21.22",
-  "windgeschwindigkeit": "4.85",
-  "windboe": "8.65",
-  "windrichtung": "252.86",
-  "gamma": "0.133",
-  "akku": "12.41"
-};
-
-! function () {
+!function () {
   let time = document.getElementById("last-time");
+  let data = d3data[d3data.length-1];
   time.innerHTML = data.datum;
 
   let pressure = document.getElementById("pressure").getElementsByClassName("value")[0];

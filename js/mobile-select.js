@@ -8,7 +8,7 @@
     dropdown.classList.toggle("active");
     mval.classList.toggle("active");
   });
-  for (let i in li) {
+  for (let i = 0; i < li.length; ++i) {
     li[i].addEventListener("click", function () {
       selected.classList.remove("dd-select");
       li[i].classList.add("dd-select");
@@ -16,6 +16,9 @@
       selected = li[i];
       dropdown.classList.remove("active");
       mval.classList.remove("active");
+      diagram3dhandler.index = i;
+      diagram3dhandler.draw();
+      diagram2dhandler.build(i);
     });
   }
 
