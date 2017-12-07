@@ -288,7 +288,7 @@ let diagram3dhandler = {
   diagram3dhandler.init();
   diagram3dhandler.data();
   diagram3dhandler.draw();
-  //diagram3dhandler.beginrotate();
+  diagram3dhandler.beginrotate();
   diagram3dhandler.addevents();
 
   document.addEventListener("keydown", function (e) {

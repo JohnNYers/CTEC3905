@@ -1,4 +1,3 @@
-
 let diagram2dhandler;
 !function () {
   let diagram = {
@@ -126,6 +125,7 @@ let diagram2dhandler;
   let humidity = document.getElementById("humidity").getElementsByClassName("value")[0];
   let windd = document.getElementById("windd").getElementsByClassName("value")[0];
   let windv = document.getElementById("windv").getElementsByClassName("value")[0];
+  let battery = document.getElementById("battery").getElementsByClassName("value")[0];
 
   pressure.innerHTML = data.druck;
   temperature.innerHTML = data.temperatur;
@@ -134,4 +134,23 @@ let diagram2dhandler;
   windv.innerHTML = data.windgeschwindigkeit;
   windd.innerHTML = data.windrichtung;
   humidity.innerHTML = data.feuchte;
+  battery.innerHTML = data.akku;
+  
+  let maxvaltable = document.getElementById("max-val-table");
+  
+  maxvaltable.appendChild(addTablerow("Temperature", maxval.mintemperatur, maxval.maxtemperatur, maxval.avgtemperatur, " °C"));
+  maxvaltable.appendChild(addTablerow("Pressure", maxval.mindruck, maxval.maxdruck, maxval.avgdruck, " hPa"));
+  maxvaltable.appendChild(addTablerow("Light", maxval.minlicht, maxval.maxlicht, maxval.avglicht, " lux"));
+  maxvaltable.appendChild(addTablerow("Gamma", maxval.mingamma, maxval.maxgamma, maxval.avggamma, " mµSv/h"));
+  maxvaltable.appendChild(addTablerow("Humidity", maxval.minfeuchte, maxval.maxfeuchte, maxval.avgfeuchte, " %"));
+  maxvaltable.appendChild(addTablerow("Wind", maxval.minwindgeschwindigkeit, maxval.maxwindgeschwindigkeit, maxval.avgwindgeschwindigkeit, " km/h"));
+  maxvaltable.appendChild(addTablerow("Battery", maxval.minakku, maxval.maxakku, maxval.avgakku, " V"));
+  
 }();
+
+function addTablerow(name, min, max, avg, ex)
+{
+  let node = document.createElement("tr");
+  node.innerHTML = `<td>${name}</td><td>${max}${ex}</td><td>${min}${ex}</td><td>${avg}${ex}</td>`;
+  return node;
+}

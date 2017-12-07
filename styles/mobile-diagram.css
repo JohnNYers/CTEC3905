@@ -187,7 +187,23 @@ article > div {
   margin-right: 1em;
 }
 
-@media screen and (min-width: 350px) {
+.max-val {
+  background: blue;
+  color: white;
+  margin-top: 2em;
+  padding: .5em;
+}
+
+table {
+  width: 100%;
+  text-align: left;
+}
+
+tr {
+  
+}
+
+@media screen and (min-width: 420px) {
   body{
     font-size: 8px;
   }
