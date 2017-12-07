@@ -85,13 +85,13 @@ function parse3d() {
   }
   numbervalues = 7;
   let otime = new Date(d3data[0].datum).getTime();
-  let p = [[[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],
-          [[], [[],[], [], [], [], [], []]],];
+  let p = [[[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]],
+          [[], [[], [], [], [], [], [], []]], ];
 
 
   let bounds = [];
@@ -102,7 +102,7 @@ function parse3d() {
     let index = parseInt(tdif / 86400000);
     let c = p[index][0].length;
     p[index][0].push(tdif % 86400000 / 86400000 - 0.5);
-    
+
     p[index][1][0].push(parseFloat(d3data[i]["temperatur"]));
     p[index][1][1].push(parseFloat(d3data[i]["licht"]));
     p[index][1][2].push(parseFloat(d3data[i]["druck"]));
@@ -153,14 +153,6 @@ function parse3d() {
   }
 }
 
-/*function resizecalc() {
-    if(gl.canvas.width !== canvas.clientWidth) canvas.width = gl.canvas.clientWidth;
-    if(gl.canvas.height !== canvas.clientHeight) canvas.height = gl.canvas.clientHeight;
-    drawScene();
-  }
-  resizecalc();
-  window.addEventListener("resize", resizecalc);*/
-
 let diagram3dhandler = {
   data: function () {
     parse3d();
@@ -205,6 +197,9 @@ let diagram3dhandler = {
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
   },
   draw: function (idx) {
+    if (this.gl.canvas.width !== this.canvas.clientWidth) this.canvas.width = this.gl.canvas.clientWidth;
+    if (this.gl.canvas.height !== this.canvas.clientHeight) this.canvas.height = this.gl.canvas.clientHeight;
+    
     if (idx && idx !== this.index) this.index = idx;
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertex_buffer[this.index]);
     var coord = this.gl.getAttribLocation(this.program, "a_position");
@@ -216,14 +211,17 @@ let diagram3dhandler = {
     this.gl.vertexAttribPointer(col, 4, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(col);
     this.gl.uniformMatrix4fv(this.matrixRotation, false, mul(translate(0, 0, -2.5), mul(rotationX(this.x), mul(rotationY(this.y), this.stdmatrix))));
-
+    this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
     this.gl.uniformMatrix4fv(this.matrixProjection, false, this.promat);
 
-    //gl.clearColor(0.5, 0.2, 0.5, 0.9);
-    this.gl.clearColor(.2, .28, .36, 1.0);
+    //gl.clearColor(0.5, 0.2, 0.5, 0.9); //lila
+    //this.gl.clearColor(.2, .28, .36, 1.0); //d-blue
+    //this.gl.clearColor(.086, .627, .522,1.0); green
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+    
 
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     this.gl.drawArrays(this.gl.LINES, 0, parseInt(points[this.index].length / 3));
@@ -242,6 +240,7 @@ let diagram3dhandler = {
     let mousedown = false;
     let that = this;
     let timer;
+
     this.canvas.addEventListener("mousedown", function () {
       that.endrotate();
       if (timer) clearTimeout(timer);
@@ -289,21 +288,21 @@ let diagram3dhandler = {
   diagram3dhandler.init();
   diagram3dhandler.data();
   diagram3dhandler.draw();
-  diagram3dhandler.beginrotate();
+  //diagram3dhandler.beginrotate();
   diagram3dhandler.addevents();
-  
+
   document.addEventListener("keydown", function (e) {
-    
+
     switch (e.keyCode) {
     case 38: //UP
       ++diagram3dhandler.index;
-        if(diagram3dhandler.index >= points.length) diagram3dhandler.index = 0;
-        diagram3dhandler.draw();
+      if (diagram3dhandler.index >= points.length) diagram3dhandler.index = 0;
+      diagram3dhandler.draw();
       break;
     case 40: //DOWN
       --diagram3dhandler.index;
-        if(diagram3dhandler.index < 0) diagram3dhandler.index = points.length-1;
-        diagram3dhandler.draw();
+      if (diagram3dhandler.index < 0) diagram3dhandler.index = points.length - 1;
+      diagram3dhandler.draw();
       break;
     }
   });
@@ -344,12 +343,12 @@ function translate(x, y, z) {
     ];
 }
 
-function makeproj(fov, aspectRatio, near, far) {
+function makeproj(fov, ar, near, far) {
   let f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
   let rangeInv = 1 / (near - far);
 
   return [
-    f / aspectRatio, 0, 0, 0,
+    f / ar, 0, 0, 0,
     0, f, 0, 0,
     0, 0, (near + far) * rangeInv, -1,
     0, 0, near * far * rangeInv * 2, 0
