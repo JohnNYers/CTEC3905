@@ -1,13 +1,14 @@
-body {
+body, h1 {
   padding: 0;
   margin: 0;
   font-family: arial;
 }
 
 header {
-  display: block;
-  padding-left: 30px;
+  height: 3.5em;
+  padding: 1em 2em 0;
 }
+
 
 .diagram {
   width: 100%;
@@ -90,7 +91,6 @@ polyline {
   visibility: visible;
   transform: translateY(25px) rotateX(0deg);
   pointer-events: all;
-  cursor: pointer;
 }
 
 #dd ul {
@@ -120,6 +120,7 @@ polyline {
   background: #16a085;
   padding: .5em 1em;
   margin: 2px;
+  cursor: pointer;
 }
 
 .dd-select {
@@ -186,13 +187,22 @@ article > div {
   margin-right: 1em;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 350px) {
+  body{
+    font-size: 8px;
+  }
+  header{
+    color: white;
+    background: #38454b;
+  }
   #dd {
     padding: 0;
-    width: 300px;
+    width: 150px;
   }
   #dd ul {
     width: 100%;
+    height: calc(100vh - 2em);
+    min-height: 15em;
     position: relative;
     visibility: visible;
     transform: translateY(0) rotate(0);
@@ -207,7 +217,7 @@ article > div {
   }
   #dd .dd-select {
     background: #465155;
-    border-left: 10px solid #72c5c0;
+    border-left: .2em solid #72c5c0;
     display: block;
   }
   .dd-select::after {
@@ -215,9 +225,9 @@ article > div {
     width: 0px;
     height: 0px;
     float: right;
-    border: 20px solid transparent;
-    border-right: 20px solid #fafafa;
-    transform: translateX(1em);
+    border: .6em solid transparent;
+    border-right: .6em solid #fafafa;
+    transform: translateX(1.05em);
   }
   #dd-value {
     display: none;
@@ -226,6 +236,7 @@ article > div {
     position: relative;
     background: #fafafa;
     height: auto;
+    box-shadow: 0px 1px 40px 5px rgba(0, 0, 0, 0.1);
   }
   .switcher {
     position: absolute;
@@ -233,24 +244,26 @@ article > div {
     right: 1em;
     margin: 0;
     z-index: 1;
+    background: #eee;
   }
   .chart {
     width: 100%;
     height: 100%;
   }
   figure {
-    width: calc(100% - 300px);
+    width: calc(100% - 150px);
     height: 100%;
     right: 0;
     top: 0;
     position: absolute;
     margin: 0;
+    
   }
   h2 {
     margin: 0;
-    padding-top: 1em;
+    padding: 1em;
     text-align: center;
-    font-size: 3em
+    font-size: 5em;
   }
   #last-time {
     font-style: normal;
@@ -261,65 +274,40 @@ article > div {
     position: relative;
     text-align: center;
     display: inline-block;
-    width: 42%;
-    margin: 2%;
-    color: white;
-    border: 2px #444 solid;
-    border-radius: .6em;
-    overflow: hidden;
+    width: 40%;
+    margin: 4%;
+    color: black;
   }
   article>h3 {
-    padding: 1em 0 3em;
+    padding: 4em 0 0em;
     margin: 0;
-    border-bottom: 2px #444 solid;
-    font-size: 1em;
-    background: rgba(189, 195, 199,1.0);
+    border: none;
+    font-size: 2em;
   }
   article > div {
     text-align: center;
-    margin: 0;
-    padding: 3em 0 1em;
-    font-size: 1em;
-    background: rgba(236, 240, 241,1.0)
-    
+    margin: .5em 0;
   }
   .latest-data svg {
     position: absolute;
     width: 3em;
     height: 3em;
-    background: #ddd;
-    padding: 1em;
-    bottom: 2.5em;
-    left: 3em;
-    border-radius: 3em;
-    border: 2px #444 solid;
+    top: 0;
+    left: calc(50% - 1.5em);
   }
   
   .latest-data {
-    width: 60%;
-    margin: auto;
+    width: 80%;
+    margin: 3em auto;
   }
   
-  #pressure svg {
-    fill: #2c3e50;
+}
+@media screen and (min-width: 750px) {
+  .latest-data {
+    min-width: 750px;
   }
-  #temperature svg {
-    fill: #e74c3c;
+  article {
+    width: 20%;
+    margin: 2.3%;
   }
-  #light svg {
-    fill: #f1c40f;
-  }
-  #gamma svg {
-    fill: #95a5a6;
-  }
-  #humidity svg {
-    fill: #3498db;
-  }
-  #windd svg {
-    fill: black;
-  }
-  #windv svg {
-    fill: black;
-  }
-  
 }
