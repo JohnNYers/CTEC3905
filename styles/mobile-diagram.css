@@ -5,46 +5,104 @@ body {
 }
 
 header {
-  height: 60vh;
-  background: #1abc9c;
-  color: white;
+  display: block;
+  padding-left: 30px;
 }
 
-#dd{
-  position: absolute;
-  font-size: 2em;
-  padding: .5em 0em 0em 1em;
+.diagram {
+  width: 100%;
+  height: 450px;
+  background: #16a085;
+}
+
+.chart.active {
+  display: block;
+}
+
+figure {
+  display: block;
+  margin: 30px;
+}
+
+.chart {
+  margin: auto;
   width: 300px;
-  pointer-events: none;
+  height: 300px;
+  display: none;
+  border-radius: 10px;
+}
+
+.axis {
+  stroke-width: 5px;
+  stroke: white;
+}
+
+text {
+  font-size: 1.5em;
+  fill: white;
+  text-anchor: middle;
+}
+
+.axis-val {
+  font-style: italic;
+}
+
+polyline {
+  stroke: #f39c12;
+  stroke-width: 10px;
+  fill: transparent;
+}
+
+.switcher {
+  float: right;
+  border-style: dotted;
+  padding: .5em;
+  margin-right: 30px;
+  cursor: pointer;
+  transition: all .1s ease-in-out;
+  font-size: .5em;
+}
+
+.switcher:hover {
+  transform: scale(1.1);
+  background-color: rgba(1, 1, 1, .1);
+}
+
+#dd {
+  font-size: 2em;
+  padding: .5em 0em 0em 10px;
+  color: white;
 }
 
 #dd-value {
   display: inline-block;
-  padding: .2em 1em;
+  padding: .2em 20px;
   border-radius: 10px;
   cursor: pointer;
   pointer-events: all;
 }
 
-#dd-value.active{
-  box-shadow: 5px 5px 40px 5px rgba(0,0,0,0.1);
+#dd-value.active {
+  box-shadow: 5px 5px 40px 5px rgba(0, 0, 0, 0.1);
 }
-#dd ul.active{
+
+#dd ul.active {
   visibility: visible;
-  transform: translateY(20px) rotateX(0deg);
+  transform: translateY(25px) rotateX(0deg);
   pointer-events: all;
+  cursor: pointer;
 }
-#dd ul{
-  transform: translateY(20px);
+
+#dd ul {
+  position: absolute;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  border: 1px solid transparent;
   visibility: hidden;
   background: white;
   transition: transform 0.3s ease-in-out;
   transform: translateY(-80px) rotateX(90deg);
-  
+  width: 300px;
 }
 
 #dd ul::before {
@@ -57,20 +115,22 @@ header {
   border: 20px solid transparent;
   border-bottom: 20px solid #fff;
 }
+
 #dd li {
   background: #16a085;
   padding: .5em 1em;
   margin: 2px;
 }
 
-.dd-select{
+.dd-select {
   display: none;
 }
 
-h1 {
+h2 {
   font-style: italic;
-  margin-left: .2em;
+  margin-left: 1em;
 }
+
 #last-time {
   font-style: normal;
   font-weight: 100;
@@ -80,7 +140,7 @@ article {
   color: grey;
 }
 
-article>h2{
+article>h3 {
   margin-left: 1em;
   padding: 2px;
   border-bottom: 2px #444 solid;
@@ -91,6 +151,7 @@ svg {
   width: 20px;
   height: 20px;
 }
+
 #pressure svg {
   fill: #2c3e50;
 }
@@ -125,16 +186,140 @@ article > div {
   margin-right: 1em;
 }
 
-.switcher {
-  position: absolute;
-  border-style: dotted;
-  padding: .5em;
-  cursor: pointer;
-  right:20px;
-  top: 20px;
-  transition: all .1s ease-in-out;
-}
-.switcher:hover {
-  transform: scale(1.1);
-  background-color: rgba(1,1,1,.1);
+@media screen and (min-width: 600px) {
+  #dd {
+    padding: 0;
+    width: 300px;
+  }
+  #dd ul {
+    width: 100%;
+    position: relative;
+    visibility: visible;
+    transform: translateY(0) rotate(0);
+    background: #38454b;
+  }
+  #dd li {
+    background: #38454b;
+    margin: 0;
+  }
+  #dd ul::before {
+    content: none;
+  }
+  #dd .dd-select {
+    background: #465155;
+    border-left: 10px solid #72c5c0;
+    display: block;
+  }
+  .dd-select::after {
+    content: '';
+    width: 0px;
+    height: 0px;
+    float: right;
+    border: 20px solid transparent;
+    border-right: 20px solid #fafafa;
+    transform: translateX(1em);
+  }
+  #dd-value {
+    display: none;
+  }
+  .diagram {
+    position: relative;
+    background: #fafafa;
+    height: auto;
+  }
+  .switcher {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    margin: 0;
+    z-index: 1;
+  }
+  .chart {
+    width: 100%;
+    height: 100%;
+  }
+  figure {
+    width: calc(100% - 300px);
+    height: 100%;
+    right: 0;
+    top: 0;
+    position: absolute;
+    margin: 0;
+  }
+  h2 {
+    margin: 0;
+    padding-top: 1em;
+    text-align: center;
+    font-size: 3em
+  }
+  #last-time {
+    font-style: normal;
+    font-weight: 100;
+    font-size: .5em;
+  }
+  article {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    width: 42%;
+    margin: 2%;
+    color: white;
+    border: 2px #444 solid;
+    border-radius: .6em;
+    overflow: hidden;
+  }
+  article>h3 {
+    padding: 1em 0 3em;
+    margin: 0;
+    border-bottom: 2px #444 solid;
+    font-size: 1em;
+    background: rgba(189, 195, 199,1.0);
+  }
+  article > div {
+    text-align: center;
+    margin: 0;
+    padding: 3em 0 1em;
+    font-size: 1em;
+    background: rgba(236, 240, 241,1.0)
+    
+  }
+  .latest-data svg {
+    position: absolute;
+    width: 3em;
+    height: 3em;
+    background: #ddd;
+    padding: 1em;
+    bottom: 2.5em;
+    left: 3em;
+    border-radius: 3em;
+    border: 2px #444 solid;
+  }
+  
+  .latest-data {
+    width: 60%;
+    margin: auto;
+  }
+  
+  #pressure svg {
+    fill: #2c3e50;
+  }
+  #temperature svg {
+    fill: #e74c3c;
+  }
+  #light svg {
+    fill: #f1c40f;
+  }
+  #gamma svg {
+    fill: #95a5a6;
+  }
+  #humidity svg {
+    fill: #3498db;
+  }
+  #windd svg {
+    fill: black;
+  }
+  #windv svg {
+    fill: black;
+  }
+  
 }
