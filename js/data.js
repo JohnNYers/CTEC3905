@@ -67,11 +67,16 @@ let diagram2dhandler;
   diagram.d = function (e) {
     document.getElementById("diagram-path").setAttribute("points", e);
   };
-  diagram.anim =
+  diagram.animLine =
     document.getElementById("diagram-path").getElementsByTagName("animate")[0];
+  diagram.animArea =
+    document.getElementById("diagram-area").getElementsByTagName("animate")[0];
 
-  diagram.anim.addEventListener("endEvent", function () {
-    diagram.anim.setAttribute("from", diagram.anim.getAttribute("to"));
+  diagram.animLine.addEventListener("endEvent", function () {
+    diagram.animLine.setAttribute("from", diagram.animLine.getAttribute("to"));
+  }, false);
+  diagram.animArea.addEventListener("endEvent", function () {
+    diagram.animArea.setAttribute("from", diagram.animArea.getAttribute("to"));
   }, false);
 
   for (let i = 0; i < d3data.length; ++i) {
@@ -104,7 +109,8 @@ let diagram2dhandler;
       str += ` ${this.contime(this.v.datum[i])},${this.position.y - this.height/2}`;
     }
     //this.d(str);
-    this.anim.setAttribute("from", str);
+    this.animLine.setAttribute("from", str);
+    this.animArea.setAttribute("from", str);
   }
 
 
@@ -114,8 +120,12 @@ let diagram2dhandler;
     for (let i = 0; i < this.v.datum.length; ++i) {
       str += this.con(diagram.v.method[e], i);
     }
-    this.anim.setAttribute("to", str);
-    this.anim.beginElement();
+    
+    this.animLine.setAttribute("to", str);
+    this.animLine.beginElement();
+    this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}`+` ${this.position.x},${this.position.y}`);
+    this.animArea.beginElement();
+    
     switch (e) {
     case 0:
       this.unit.textContent = "°C";
