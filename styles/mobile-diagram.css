@@ -30,27 +30,32 @@ figure {
   width: 300px;
   height: 300px;
   display: none;
-  border-radius: 10px;
 }
 
 .axis {
-  stroke-width: 5px;
-  stroke: white;
+  stroke-width: 2px;
+  stroke: black;
+}
+
+.label text {
+  text-anchor: end;
+  font-size: 1.5em;
+}
+
+.label line {
+  stroke-width: 2px;
+  stroke: black;
 }
 
 text {
-  font-size: 1.5em;
-  fill: white;
+  font-size: 2em;
+  fill: black;
   text-anchor: middle;
-}
-
-.axis-val {
-  font-style: italic;
 }
 
 polyline {
   stroke: #f39c12;
-  stroke-width: 10px;
+  stroke-width: 4px;
   fill: transparent;
 }
 
@@ -197,10 +202,6 @@ article > div {
 table {
   width: 100%;
   text-align: left;
-}
-
-tr {
-  
 }
 
 @media screen and (min-width: 420px) {

@@ -1,5 +1,5 @@
 let diagram2dhandler;
-!function () {
+! function () {
   let diagram = {
     position: {
       x: 0,
@@ -14,7 +14,7 @@ let diagram2dhandler;
           max: 0,
           min: Infinity,
           data: []
-        
+
         }, {
           "name": "licht",
           max: 0,
@@ -31,30 +31,33 @@ let diagram2dhandler;
           min: Infinity,
           data: []
         },
-               {
+        {
           "name": "windgeschwindigkeit",
           max: 0,
           min: Infinity,
           data: []
-        
+
         },
-               {
+        {
           "name": "feuchte",
           max: 0,
           min: Infinity,
           data: []
-        
+
         },
-               {
+        {
           "name": "akku",
           max: 0,
           min: Infinity,
           data: []
-        
+
         }
       ]
     }
   };
+  diagram.xticks = document.getElementById("x-labels");
+  diagram.yticks = document.getElementById("y-labels");
+  diagram.unit = document.getElementById("unit");
   diagram.axis = document.getElementById("diagram2d").getElementsByClassName("axis");
   diagram.width = parseInt(diagram.axis[1].getAttribute("x2")) - parseInt(diagram.axis[1].getAttribute("x1"));
 
@@ -84,19 +87,27 @@ let diagram2dhandler;
     }
 
   }
+  diagram.contime = function (t) {
+    return ((t - this.v.dmin) * this.width / (this.v.dmax - this.v.dmin) + this.position.x);
+  }
+
+  diagram.conx = function (e, x) {
+    return (this.position.y - (e.max - e.min !== 0 ? (x - e.min) * this.height / (e.max - e.min) : 0));
+  }
+  diagram.con = function (e, i) {
+    return ` ${this.contime(this.v.datum[i])},${this.conx(e, e.data[i])}`;
+  }
 
   diagram.init = function () {
     let str = "";
     for (let i = 0; i < this.v.datum.length; ++i) {
-      str += ` ${(this.v.datum[i]-this.v.dmin)*this.width/(this.v.dmax - this.v.dmin) + this.position.x},${this.position.y - this.height/2}`;
+      str += ` ${this.contime(this.v.datum[i])},${this.position.y - this.height/2}`;
     }
     //this.d(str);
     this.anim.setAttribute("from", str);
   }
 
-  diagram.con = function (e, i) {
-    return ` ${(this.v.datum[i]-this.v.dmin)*this.width/(this.v.dmax - this.v.dmin) + this.position.x},${this.position.y - (e.max-e.min !== 0?(e.data[i]-e.min)*this.height/(e.max - e.min):0)}`;
-  }
+
 
   diagram.build = function (e) {
     let str = "";
@@ -105,17 +116,128 @@ let diagram2dhandler;
     }
     this.anim.setAttribute("to", str);
     this.anim.beginElement();
+    switch (e) {
+    case 0:
+      this.unit.textContent = "°C";
+      break;
+    case 1:
+      this.unit.textContent = "lux";
+      break;
+    case 2:
+      this.unit.textContent = "hPa";
+      break;
+    case 3:
+      this.unit.textContent = "µSv/h";
+      break;
+    case 4:
+      this.unit.textContent = "km/h";
+      break;
+    case 5:
+      this.unit.textContent = "%";
+      break;
+    case 6:
+      this.unit.textContent = "V";
+      break;
+    }
+    this.ticksY(e);
   }
 
+
+
+  diagram.ticksY = function (e) {
+    while (this.yticks.firstChild) {
+      this.yticks.removeChild(this.yticks.firstChild);
+    }
+    let m = diagram.v.method[e];
+    function ticks(range) {
+      let s = 10 ** (Math.floor(Math.log10(range/10)));
+      let interval = [s, 2 * s, 5 * s];
+      let mult = 1;
+      let ticks;
+      for (let i = 0; i < interval.length; ++i) {
+        ticks = mult * interval[i];
+        if (range / ticks <= 10) break;
+        if (i === interval.length - 1) {
+          mult *= 10;
+          i = 0;
+        }
+      }
+      return ticks;
+    }
+    
+    
+    let tickInterval = ticks(m.max - m.min);
+    let rest = tickInterval * (Math.floor(m.min / tickInterval)+1);
+    
+    let num = tickInterval >= 1 ? 0 : -Math.log10(tickInterval)+1;
+    for (let i = rest; i < m.max; i += tickInterval) {
+      let y = diagram.conx(m, i)
+      let node = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      node.setAttribute("x", 55);
+      node.setAttribute("y", y+5);
+      node.innerHTML = i.toFixed(num);
+      diagram.yticks.appendChild(node);
+      let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", 65);
+      line.setAttribute("y1", y);
+      line.setAttribute("x2", 75);
+      line.setAttribute("y2", y);
+      diagram.yticks.appendChild(line);
+    }
+  }
+
+  function makeLabels() {
+    let interval = [1, 15, 2,
+                  2, 15, 2,
+                  2, 6, 2,
+                  2, 7,
+                  4,
+                  12];
+
+    function timestring(t) {
+      return `${t.getDate()}.${t.getMonth()+1} ${t.getHours()}:${t.getMinutes()}`;
+    }
+
+    function ticks(range, num) {
+      let start = 1000;
+      for (let i = 0; i < interval.length; ++i) {
+        start *= interval[i];
+        if (range / start <= num) break;
+      }
+      return start;
+    }
+
+    let tickInterval = ticks(diagram.v.dmax - diagram.v.dmin, 10);
+    for (let i = diagram.v.dmin % tickInterval; i + diagram.v.dmin < diagram.v.dmax; i += tickInterval) {
+      let x = diagram.contime(i + diagram.v.dmin)
+      let node = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      node.setAttribute("x", x);
+      node.setAttribute("y", "720");
+      let time = new Date(diagram.v.dmin + i);
+      node.innerHTML = timestring(time);
+      node.setAttribute("transform", `rotate(-60 ${x} 720)`);
+      diagram.xticks.appendChild(node);
+
+      let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x);
+      line.setAttribute("y1", "700");
+      line.setAttribute("x2", x);
+      line.setAttribute("y2", "710");
+      diagram.xticks.appendChild(line);
+    }
+  }
+  makeLabels();
   diagram.init();
   diagram.build(0);
   diagram2dhandler = diagram;
 }();
 
 
-!function () {
+
+
+! function () {
   let time = document.getElementById("last-time");
-  let data = d3data[d3data.length-1];
+  let data = d3data[d3data.length - 1];
   time.innerHTML = data.datum;
 
   let pressure = document.getElementById("pressure").getElementsByClassName("value")[0];
@@ -135,9 +257,9 @@ let diagram2dhandler;
   windd.innerHTML = data.windrichtung;
   humidity.innerHTML = data.feuchte;
   battery.innerHTML = data.akku;
-  
+
   let maxvaltable = document.getElementById("max-val-table");
-  
+
   maxvaltable.appendChild(addTablerow("Temperature", maxval.mintemperatur, maxval.maxtemperatur, maxval.avgtemperatur, " °C"));
   maxvaltable.appendChild(addTablerow("Pressure", maxval.mindruck, maxval.maxdruck, maxval.avgdruck, " hPa"));
   maxvaltable.appendChild(addTablerow("Light", maxval.minlicht, maxval.maxlicht, maxval.avglicht, " lux"));
@@ -145,11 +267,10 @@ let diagram2dhandler;
   maxvaltable.appendChild(addTablerow("Humidity", maxval.minfeuchte, maxval.maxfeuchte, maxval.avgfeuchte, " %"));
   maxvaltable.appendChild(addTablerow("Wind", maxval.minwindgeschwindigkeit, maxval.maxwindgeschwindigkeit, maxval.avgwindgeschwindigkeit, " km/h"));
   maxvaltable.appendChild(addTablerow("Battery", maxval.minakku, maxval.maxakku, maxval.avgakku, " V"));
-  
+
 }();
 
-function addTablerow(name, min, max, avg, ex)
-{
+function addTablerow(name, min, max, avg, ex) {
   let node = document.createElement("tr");
   node.innerHTML = `<td>${name}</td><td>${max}${ex}</td><td>${min}${ex}</td><td>${avg}${ex}</td>`;
   return node;
