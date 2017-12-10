@@ -1,4 +1,5 @@
-body, h1 {
+body,
+h1 {
   padding: 0;
   margin: 0;
   font-family: arial;
@@ -8,7 +9,6 @@ header {
   height: 3.5em;
   padding: 1em 2em 0;
 }
-
 
 .diagram {
   width: 100%;
@@ -55,7 +55,7 @@ text {
 }
 
 #diagram-area {
-  fill: rgba(192, 57, 43,.6);
+  fill: rgba(192, 57, 43, .6);
 }
 
 .switcher {
@@ -204,10 +204,10 @@ table {
 }
 
 @media screen and (min-width: 420px) {
-  body{
+  body {
     font-size: 8px;
   }
-  header{
+  header {
     color: white;
     background: #38454b;
   }
@@ -273,8 +273,19 @@ table {
     top: 0;
     position: absolute;
     margin: 0;
-    
   }
+  .label text {
+    font-size: 2.3em;
+  }
+  line {
+    stroke-width: 1px;
+    stroke: black;
+  }
+  text {
+    font-size: 4em;
+    fill: black;
+  }
+  
   h2 {
     margin: 0;
     padding: 1em;
@@ -311,14 +322,17 @@ table {
     top: 0;
     left: calc(50% - 1.5em);
   }
-  
   .latest-data {
     width: 80%;
     margin: 3em auto;
   }
-  
 }
+
 @media screen and (min-width: 750px) {
+  #diagram-path {
+    stroke-width: 3px;
+  }
+  
   .latest-data {
     min-width: 750px;
   }
