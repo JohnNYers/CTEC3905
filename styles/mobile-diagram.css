@@ -423,6 +423,7 @@ td:nth-child(4)::before {
     display: table;
     text-align: left;
     border-collapse: collapse;
+    box-shadow: 2px 4px 23px 0px rgba(0,0,0,0.3);
   }
   tr {
     display: table-row;
