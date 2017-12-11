@@ -10,6 +10,8 @@ using System;
 using System.Net;
 using System.IO;
 using System.Net.Sockets;
+using System.Net.Http;
+using System.Security.AccessControl;
 using System.Threading;
 
 namespace ProxyWebServer
@@ -60,14 +62,9 @@ namespace ProxyWebServer
 		
 		private static void sendHTTP(string data, StreamWriter writer)
 		{
-			WebClient client = new WebClient();
-			//Console.WriteLine("requested: " + "http://wetter-maulburg.de" + data);
-			//HttpWebRequest request = (HttpWebRequest) WebRequest.Create("http://wetter-maulburg.de" + data);
-			//request.Timeout = 3000;
-			
+			var httpClient = new HttpClient();
 			try {
-				string dataWeb = client.DownloadString("http://wetter-maulburg.de" + data);
-				//StreamReader r = new StreamReader(request.GetResponse().GetResponseStream());
+				string dataWeb = httpClient.GetStringAsync("http://wetter-maulburg.de" + data).GetAwaiter().GetResult();
 				writer.Write("HTTP/1.1 200 OK\r\n");
 				writer.Write("Content-Type: text/html; charset=UTF-8\r\n");
 				writer.Write("Content-Encoding: UTF-8\r\n");
@@ -75,7 +72,6 @@ namespace ProxyWebServer
 				writer.Write("Accept-Ranges: bytes\r\n");
 				writer.Write("Connection: close\r\n");
 				writer.Write("\r\n");
-				//while(r.Peek() != -1) writer.WriteLine(r.ReadLine());
 				writer.Write(dataWeb);
 				writer.Write("\r\n");
 				writer.Write("\r\n");

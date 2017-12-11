@@ -1,4 +1,4 @@
-!function (){
+! function () {
   let now = new Date;
   let weekago = new Date(now.getTime() - 604800000);
   update(d2str(weekago), d2str(now));
@@ -8,17 +8,45 @@ function d2str(date) {
   return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
 }
 
-function update(dstart, dend) {
-
-  let xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      d3data = JSON.parse(this.responseText);
+function update(dstart, dend, reqest) {
+  let finish = 0;
+  let alertBit = 0;
+  function initcall() {
+    if(finish >= 1) {
+      if(alertBit !== 0) alert("Fetching data was not successful.\nTry to restart the local server or check whether (not weather :D) the server http://wetter-maulburg.de is working as expected.\n This site will continue with saved example data.");
       init();
     }
+    else ++finish;
+  }
+  let xhttpVal = new XMLHttpRequest();
+  xhttpVal.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if(this.status === 200) {
+        d3data = JSON.parse(this.responseText);
+      }
+      else {
+        alertBit |= 1; 
+      }
+      initcall();
+    }
   };
-  xhttp.open("GET", `http://127.0.0.1:12346/jsonSql.php?start=${dstart}&end=${dend}`, true);
-  xhttp.send();
+  xhttpVal.open("GET", `http://127.0.0.1:12346/jsonSql.php?start=${dstart}&end=${dend}`, true);
+  xhttpVal.send();
+  
+  let xhttpMax = new XMLHttpRequest();
+  xhttpMax.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if(this.status === 200) {
+        maxval = JSON.parse(this.responseText);
+      }
+      else {
+        alertBit |= 2; 
+      }
+      initcall();
+    }
+  };
+  xhttpMax.open("GET", `http://127.0.0.1:12346/maxValues.php?start=${dstart}&end=${dend}`, true);
+  xhttpMax.send();
 };
 
 function init() {
