@@ -159,19 +159,21 @@
     </table>
   </section>
   
-  
-  
-  
-  <script src="js/json.js"></script>
-  <script src="js/mobile-select.js"></script>
-  <script src="js/data.js"></script>
   <script id="vshader" type="x-shader/x-vertex">
     precision mediump float; attribute vec3 a_position; attribute vec4 a_color; uniform mat4 rot_matrix; uniform mat4 proj_matrix; varying vec4 vColor; void main() { gl_Position = proj_matrix * rot_matrix * vec4(a_position, 1.0); vColor = a_color; gl_PointSize = 5.0; }
   </script>
   <script id="fshader" type="x-shader/x-fragment">
     precision mediump float; varying vec4 vColor; void main() { gl_FragColor = vColor; }
   </script>
+  
+  
+  <script src="js/json.js"></script>
+  <script src="js/mobile-select.js"></script>
   <script src="js/3d-diagram.js"></script>
+  <script src="js/2d-diagram.js"></script>
+  <script src="js/data.js"></script>
+  
+  
   <script src="js/diagram-handler.js"></script>
 </body>
 

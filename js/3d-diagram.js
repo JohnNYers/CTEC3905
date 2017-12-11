@@ -85,21 +85,19 @@ function parse3d() {
   }
   numbervalues = 7;
   let otime = new Date(d3data[0].datum).getTime();
-  let p = [[[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]],
-          [[], [[], [], [], [], [], [], []]], ];
-
-
+  
+  let p = [];
   let bounds = [];
-  for (let i = 0; i < p.length; ++i) bounds[i] = new Bound();
 
   for (let i = 0; i < d3data.length; ++i) {
     let tdif = new Date(d3data[i].datum).getTime() - otime;
     let index = parseInt(tdif / 86400000);
+    
+    if(!p[index]) {
+      p[index] = [[], [[], [], [], [], [], [], []]];
+      bounds[index] = new Bound();
+    }
+    
     let c = p[index][0].length;
     p[index][0].push(tdif % 86400000 / 86400000 - 0.5);
 
@@ -111,7 +109,7 @@ function parse3d() {
     p[index][1][5].push(parseFloat(d3data[i]["feuchte"]));
     p[index][1][6].push(parseFloat(d3data[i]["akku"]));
   }
-
+  
   for (let i = 0; i < p.length; ++i) {
     p[i] = smooth(p[i], 5, 0.005, bounds);
   }
@@ -195,11 +193,11 @@ let diagram3dhandler = {
 
     this.matrixProjection = this.gl.getUniformLocation(this.program, "proj_matrix");
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
+    this.data();
   },
   draw: function (idx) {
     if (this.gl.canvas.width !== this.canvas.clientWidth) this.canvas.width = this.gl.canvas.clientWidth;
     if (this.gl.canvas.height !== this.canvas.clientHeight) this.canvas.height = this.gl.canvas.clientHeight;
-    
     if (idx && idx !== this.index) this.index = idx;
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertex_buffer[this.index]);
     var coord = this.gl.getAttribLocation(this.program, "a_position");
@@ -281,32 +279,6 @@ let diagram3dhandler = {
     });
   }
 };
-
-
-
-! function dostuff() {
-  diagram3dhandler.init();
-  diagram3dhandler.data();
-  diagram3dhandler.draw();
-  diagram3dhandler.beginrotate();
-  diagram3dhandler.addevents();
-
-  document.addEventListener("keydown", function (e) {
-
-    switch (e.keyCode) {
-    case 38: //UP
-      ++diagram3dhandler.index;
-      if (diagram3dhandler.index >= points.length) diagram3dhandler.index = 0;
-      diagram3dhandler.draw();
-      break;
-    case 40: //DOWN
-      --diagram3dhandler.index;
-      if (diagram3dhandler.index < 0) diagram3dhandler.index = points.length - 1;
-      diagram3dhandler.draw();
-      break;
-    }
-  });
-}();
 
 function r2d(r) {
   return r / 180 * Math.PI;

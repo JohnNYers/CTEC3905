@@ -26,22 +26,22 @@ namespace ProxyWebServer
 			Console.ForegroundColor = ConsoleColor.Green;
 			Console.WriteLine("TCPlistener started!");
 			Console.ResetColor();
+			
 			while(true) {
 				TcpClient c = server.AcceptTcpClient();
-				//new Thread(() => Serve(c)).Start();
-				Serve(c);
+				Console.WriteLine(">>>CLIENT CONNECTED<<<");
+				new Thread(() => Serve(c)).Start();
 			}
 		}
 		public static void Serve(TcpClient client)
 		{
-			Console.WriteLine("Client connected");
 			StreamWriter writer = new StreamWriter( client.GetStream() );
 			StreamReader reader = new StreamReader( client.GetStream());
-			Console.ForegroundColor=ConsoleColor.DarkMagenta;
+			string print = "";
 			if(reader.Peek() != -1)
 			{
 				string plain = reader.ReadLine();
-				Console.WriteLine(plain);
+				print += "\t" + plain + "\r\n";
 				string[] request = plain.Split(' ');
 				if(request.Length != 3) 
 				{
@@ -53,34 +53,48 @@ namespace ProxyWebServer
 				
 				sendHTTP(request[1], writer);
 			}
-			while(reader.Peek() != -1) Console.WriteLine(reader.ReadLine());
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("<Request Finished>\n> ");
-			Console.ResetColor();
+			//while(reader.Peek() != -1) Console.WriteLine(reader.ReadLine());
+			Console.WriteLine(print);
 			client.Close();
 		}
 		
 		private static void sendHTTP(string data, StreamWriter writer)
 		{
-			Console.WriteLine("requested: " + "http://wetter-maulburg.de" + data);
-			HttpWebRequest request = (HttpWebRequest) WebRequest.Create("http://wetter-maulburg.de" + data);
+			WebClient client = new WebClient();
+			//Console.WriteLine("requested: " + "http://wetter-maulburg.de" + data);
+			//HttpWebRequest request = (HttpWebRequest) WebRequest.Create("http://wetter-maulburg.de" + data);
+			//request.Timeout = 3000;
+			
 			try {
-				StreamReader r = new StreamReader(request.GetResponse().GetResponseStream());
+				string dataWeb = client.DownloadString("http://wetter-maulburg.de" + data);
+				//StreamReader r = new StreamReader(request.GetResponse().GetResponseStream());
 				writer.Write("HTTP/1.1 200 OK\r\n");
 				writer.Write("Content-Type: text/html; charset=UTF-8\r\n");
 				writer.Write("Content-Encoding: UTF-8\r\n");
+				writer.Write("Access-Control-Allow-Origin: *\r\n");
 				writer.Write("Accept-Ranges: bytes\r\n");
 				writer.Write("Connection: close\r\n");
 				writer.Write("\r\n");
-				while(r.Peek() != -1) writer.WriteLine(r.ReadLine());
+				//while(r.Peek() != -1) writer.WriteLine(r.ReadLine());
+				writer.Write(dataWeb);
 				writer.Write("\r\n");
 				writer.Write("\r\n");
 				writer.Flush();
 			}
 			catch(Exception e)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("error");
+				writer.Write("HTTP/1.1 404 OK\r\n");
+				writer.Write("Content-Type: text/html; charset=UTF-8\r\n");
+				writer.Write("Content-Encoding: UTF-8\r\n");
+				writer.Write("Access-Control-Allow-Origin: *\r\n");
+				writer.Write("Accept-Ranges: bytes\r\n");
+				writer.Write("Connection: close\r\n");
+				writer.Write("\r\n");
+				//while(r.Peek() != -1) writer.WriteLine(r.ReadLine());
+				writer.Write("\r\n");
+				writer.Write("\r\n");
+				writer.Flush();
+				Console.WriteLine("**************Error" + e.Message);
 			}
 		}
 	}
