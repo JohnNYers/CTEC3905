@@ -1,3 +1,6 @@
+body {
+  min-width: 344px;
+}
 body,
 h1 {
   padding: 0;
@@ -137,9 +140,8 @@ h2 {
 }
 
 h3 {
-  font-size: 3em;
-  padding: .33em;
-  
+  font-size: 2em;
+  padding: 1em .5em 0;
 }
 
 #last-time {
@@ -208,7 +210,9 @@ table {
   font-size: 2em;
 }
 
-table, td, tr { 
+table,
+td,
+tr {
   display: block;
 }
 
@@ -221,12 +225,11 @@ td {
 
 .active td {
   max-height: 2em;
-  padding: .2em 0 .2em 6.8em;
+  padding: .2em 0 .5em 6.8em;
   background: #27ae60;
 }
 
 td:nth-child(1) {
-  padding-left: .5em;
   max-height: inherit;
   padding: .5em;
   cursor: pointer;
@@ -237,32 +240,43 @@ td:nth-child(1) {
 tr:nth-child(1) {
   display: none;
 }
-tr{
+
+tr {
   position: relative;
   overflow-y: hidden;
 }
+
 td::before {
   position: absolute;
-  left: 2em;
+  left: .75em;
 }
+
 td:nth-child(1)::after {
   position: absolute;
   content: '';
   display: inline-block;
-  border: 15px solid transparent;
-  border-left: 15px solid white;
-  top: 20px;
+  border: .5em solid transparent;
+  border-left: .5em solid white;
+  top: .6em;
   right: 1em;
   transition: transform .5s;
 }
+
 .active td:nth-child(1)::after {
   transform: rotate(90deg);
 }
-td:nth-child(2)::before {content: "Maximum:";}
-td:nth-child(3)::before {content: "Minimum:";}
-td:nth-child(4)::before {content: "Avarage:";}
 
+td:nth-child(2)::before {
+  content: "Maximum:";
+}
 
+td:nth-child(3)::before {
+  content: "Minimum:";
+}
+
+td:nth-child(4)::before {
+  content: "Avarage:";
+}
 
 @media screen and (min-width: 420px) {
   body {
@@ -346,7 +360,6 @@ td:nth-child(4)::before {content: "Avarage:";}
     font-size: 4em;
     fill: black;
   }
-  
   h2 {
     margin: 0;
     padding: 1em;
@@ -387,13 +400,85 @@ td:nth-child(4)::before {content: "Avarage:";}
     width: 80%;
     margin: 3em auto;
   }
+  
+}
+
+@media screen and (min-width: 600px) {
+  header {
+    font-size: 1.5em;
+  }
+  h3 {
+    padding-left: 5%;
+    font-size: 4em;
+  }
+  .max-val {
+    margin-top: 5em;
+    background: #2ecc71;
+    color: white;
+    padding-bottom: 5em;
+  }
+  table {
+    width: 90%;
+    margin: auto;
+    display: table;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  tr {
+    display: table-row;
+  }
+  th {
+    width: 25%;
+    border-bottom: 2px solid white;
+    background: #0001;
+    padding: .5em;
+    font-size: 1.5em;
+  }
+  
+  td {
+    display: table-cell;
+    max-height: inherit;
+    padding: .5em;
+    font-size: 1em;
+  }
+  .active td {
+    max-height: inherit;
+    padding: .5em;
+    background: transparent;
+  }
+  td:nth-child(1) {
+    max-height: inherit;
+    padding: .5em;
+    cursor: auto;
+    border-top: none;
+  }
+  tr:nth-child(even) {
+    background: #fff3;
+  }
+  tr:nth-child(1) {
+    display: table-row;
+  }
+  td::before {
+    content: none;
+  }
+  td:nth-child(1)::after {
+    content: none;
+  }
+  td:nth-child(2)::before {
+    content: none;
+  }
+  td:nth-child(3)::before {
+    content: none;
+  }
+  td:nth-child(4)::before {
+    content: none;
+  }
 }
 
 @media screen and (min-width: 750px) {
   #diagram-path {
     stroke-width: 3px;
   }
-  
   .latest-data {
     min-width: 750px;
   }
@@ -401,4 +486,5 @@ td:nth-child(4)::before {content: "Avarage:";}
     width: 20%;
     margin: 2.3%;
   }
+  
 }
