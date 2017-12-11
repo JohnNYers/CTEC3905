@@ -120,12 +120,12 @@ let diagram2dhandler;
     for (let i = 0; i < this.v.datum.length; ++i) {
       str += this.con(diagram.v.method[e], i);
     }
-    
+
     this.animLine.setAttribute("to", str);
     this.animLine.beginElement();
-    this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}`+` ${this.position.x},${this.position.y}`);
+    this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
     this.animArea.beginElement();
-    
+
     switch (e) {
     case 0:
       this.unit.textContent = "°C";
@@ -159,8 +159,9 @@ let diagram2dhandler;
       this.yticks.removeChild(this.yticks.firstChild);
     }
     let m = diagram.v.method[e];
+
     function ticks(range) {
-      let s = 10 ** (Math.floor(Math.log10(range/10)));
+      let s = 10 ** (Math.floor(Math.log10(range / 10)));
       let interval = [s, 2 * s, 5 * s];
       let mult = 1;
       let ticks;
@@ -174,17 +175,17 @@ let diagram2dhandler;
       }
       return ticks;
     }
-    
-    
+
+
     let tickInterval = ticks(m.max - m.min);
-    let rest = tickInterval * (Math.floor(m.min / tickInterval)+1);
-    
-    let num = tickInterval >= 1 ? 0 : -Math.log10(tickInterval)+1;
+    let rest = tickInterval * (Math.floor(m.min / tickInterval) + 1);
+
+    let num = tickInterval >= 1 ? 0 : -Math.log10(tickInterval) + 1;
     for (let i = rest; i < m.max; i += tickInterval) {
       let y = diagram.conx(m, i)
       let node = document.createElementNS("http://www.w3.org/2000/svg", "text");
       node.setAttribute("x", 55);
-      node.setAttribute("y", y+5);
+      node.setAttribute("y", y + 5);
       node.innerHTML = i.toFixed(num);
       diagram.yticks.appendChild(node);
       let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -269,15 +270,24 @@ let diagram2dhandler;
   battery.innerHTML = data.akku;
 
   let maxvaltable = document.getElementById("max-val-table");
-
-  maxvaltable.appendChild(addTablerow("Temperature", maxval.mintemperatur, maxval.maxtemperatur, maxval.avgtemperatur, " °C"));
+  let active = addTablerow("Temperature", maxval.mintemperatur, maxval.maxtemperatur, maxval.avgtemperatur, " °C");
+  active.classList.add("active");
+  maxvaltable.appendChild(active);
   maxvaltable.appendChild(addTablerow("Pressure", maxval.mindruck, maxval.maxdruck, maxval.avgdruck, " hPa"));
   maxvaltable.appendChild(addTablerow("Light", maxval.minlicht, maxval.maxlicht, maxval.avglicht, " lux"));
   maxvaltable.appendChild(addTablerow("Gamma", maxval.mingamma, maxval.maxgamma, maxval.avggamma, " mµSv/h"));
   maxvaltable.appendChild(addTablerow("Humidity", maxval.minfeuchte, maxval.maxfeuchte, maxval.avgfeuchte, " %"));
   maxvaltable.appendChild(addTablerow("Wind", maxval.minwindgeschwindigkeit, maxval.maxwindgeschwindigkeit, maxval.avgwindgeschwindigkeit, " km/h"));
   maxvaltable.appendChild(addTablerow("Battery", maxval.minakku, maxval.maxakku, maxval.avgakku, " V"));
+  let trs = maxvaltable.getElementsByTagName("tr");
 
+  for (let i = 1; i < trs.length; ++i) {
+    trs[i].addEventListener("click", function () {
+      active.classList.remove("active");
+      trs[i].classList.add("active");
+      active = trs[i];
+    });
+  }
 }();
 
 function addTablerow(name, min, max, avg, ex) {

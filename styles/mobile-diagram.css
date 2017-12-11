@@ -136,6 +136,12 @@ h2 {
   margin-left: 1em;
 }
 
+h3 {
+  font-size: 3em;
+  padding: .33em;
+  
+}
+
 #last-time {
   font-style: normal;
   font-weight: 100;
@@ -192,16 +198,71 @@ article > div {
 }
 
 .max-val {
-  background: blue;
+  margin-top: 5em;
+  background: #2ecc71;
   color: white;
-  margin-top: 2em;
-  padding: .5em;
 }
 
 table {
   width: 100%;
-  text-align: left;
+  font-size: 2em;
 }
+
+table, td, tr { 
+  display: block;
+}
+
+td {
+  max-height: 0;
+  transition: max-height .3s;
+  padding: 0 0 0 6.8em;
+  font-size: .7em;
+}
+
+.active td {
+  max-height: 2em;
+  padding: .2em 0 .2em 6.8em;
+  background: #27ae60;
+}
+
+td:nth-child(1) {
+  padding-left: .5em;
+  max-height: inherit;
+  padding: .5em;
+  cursor: pointer;
+  font-size: 1em;
+  border-top: 2px solid #ecf0f1;
+}
+
+tr:nth-child(1) {
+  display: none;
+}
+tr{
+  position: relative;
+  overflow-y: hidden;
+}
+td::before {
+  position: absolute;
+  left: 2em;
+}
+td:nth-child(1)::after {
+  position: absolute;
+  content: '';
+  display: inline-block;
+  border: 15px solid transparent;
+  border-left: 15px solid white;
+  top: 20px;
+  right: 1em;
+  transition: transform .5s;
+}
+.active td:nth-child(1)::after {
+  transform: rotate(90deg);
+}
+td:nth-child(2)::before {content: "Maximum:";}
+td:nth-child(3)::before {content: "Minimum:";}
+td:nth-child(4)::before {content: "Avarage:";}
+
+
 
 @media screen and (min-width: 420px) {
   body {
