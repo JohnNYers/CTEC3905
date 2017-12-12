@@ -23,9 +23,11 @@ function linearize(p) {
     for (let j = 0; j < p.length; ++j) {
       let ls = 0;
       let rs = 0;
+      if(!p[j]) continue;
       for (let i = 0; i < p[j][v].length; ++i) {
-        if (j > 0) {
+        if(j > 0) {
           let d = Infinity;
+          if(!p[j-1]) continue;
           for (let z = ls; z < p[j - 1][v].length; ++z) {
             let dd = distance(p[j][0][i], p[j - 1][0][z], j / 7);
             if (dd <= d) {
@@ -35,8 +37,8 @@ function linearize(p) {
 
               break;
             }
-            y[v] = y[v].concat([j / 7 - 0.5].concat(p[j][v][i]));
-            y[v] = y[v].concat([(j - 1) / 7 - 0.5].concat(p[j - 1][v][ls]));
+            y[v] = y[v].concat([j / p.length - 0.5].concat(p[j][v][i]));
+            y[v] = y[v].concat([(j - 1) / p.length - 0.5].concat(p[j - 1][v][ls]));
           }
         }
         if (j < p.length - 1) {
@@ -44,8 +46,8 @@ function linearize(p) {
         }
 
         if (i > 0) {
-          y[v] = y[v].concat([j / 7 - 0.5].concat(p[j][v][i]));
-          y[v] = y[v].concat([j / 7 - 0.5].concat(p[j][v][i - 1]));
+          y[v] = y[v].concat([j / p.length - 0.5].concat(p[j][v][i]));
+          y[v] = y[v].concat([j / p.length - 0.5].concat(p[j][v][i - 1]));
         }
       }
     }
@@ -54,10 +56,10 @@ function linearize(p) {
 }
 
 function smooth(p, e, d, b) {
-
+  
   if (!d) d = 0.02;
   if (!e) e = 5;
-
+  
   let y = [];
   for (let v = 0; v < numbervalues; ++v) {
     y[v] = [];
@@ -88,17 +90,16 @@ function parse3d() {
   
   let p = [];
   let bounds = [];
-
+  for(let i = 0; i < numbervalues; ++i) {
+    bounds[i] = new Bound();
+  }
   for (let i = 0; i < d3data.length; ++i) {
     let tdif = new Date(d3data[i].datum).getTime() - otime;
     let index = parseInt(tdif / 86400000);
     
     if(!p[index]) {
       p[index] = [[], [[], [], [], [], [], [], []]];
-      bounds[index] = new Bound();
     }
-    
-    let c = p[index][0].length;
     p[index][0].push(tdif % 86400000 / 86400000 - 0.5);
 
     p[index][1][0].push(parseFloat(d3data[i]["temperatur"]));
@@ -109,9 +110,9 @@ function parse3d() {
     p[index][1][5].push(parseFloat(d3data[i]["feuchte"]));
     p[index][1][6].push(parseFloat(d3data[i]["akku"]));
   }
-  
+  console.log(bounds);
   for (let i = 0; i < p.length; ++i) {
-    p[i] = smooth(p[i], 5, 0.005, bounds);
+    if(p[i]) p[i] = smooth(p[i], 5, 0.005, bounds);
   }
 
   points = linearize(p);
