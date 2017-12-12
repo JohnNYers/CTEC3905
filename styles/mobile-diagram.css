@@ -145,6 +145,7 @@ h3 {
 }
 
 #last-time {
+  display: block;
   font-style: normal;
   font-weight: 100;
 }
@@ -278,7 +279,7 @@ td:nth-child(4)::before {
   content: "Avarage:";
 }
 
-@media screen and (min-width: 420px) {
+@media screen and (min-width: 440px) {
   body {
     font-size: 8px;
   }
@@ -399,6 +400,7 @@ td:nth-child(4)::before {
   .latest-data {
     width: 80%;
     margin: 3em auto;
+    max-width: 400px;
   }
   
 }
@@ -476,7 +478,7 @@ td:nth-child(4)::before {
   }
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 800px) {
   #diagram-path {
     stroke-width: 3px;
   }
