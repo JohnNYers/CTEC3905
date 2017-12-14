@@ -110,7 +110,7 @@ function parse3d() {
     p[index][1][5].push(parseFloat(d3data[i]["feuchte"]));
     p[index][1][6].push(parseFloat(d3data[i]["akku"]));
   }
-  console.log(bounds);
+  
   for (let i = 0; i < p.length; ++i) {
     if(p[i]) p[i] = smooth(p[i], 5, 0.005, bounds);
   }
@@ -215,7 +215,7 @@ let diagram3dhandler = {
 
     //gl.clearColor(0.5, 0.2, 0.5, 0.9); //lila
     //this.gl.clearColor(.2, .28, .36, 1.0); //d-blue
-    //this.gl.clearColor(.086, .627, .522,1.0); green
+    //this.gl.clearColor(.086, .627, .522,1.0); //green
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);

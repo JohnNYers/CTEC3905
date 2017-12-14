@@ -224,17 +224,17 @@ let diagram2dhandler;
       let x = diagram.contime(i + diagram.v.dmin)
       let node = document.createElementNS("http://www.w3.org/2000/svg", "text");
       node.setAttribute("x", x);
-      node.setAttribute("y", "720");
+      node.setAttribute("y", "700");
       let time = new Date(diagram.v.dmin + i);
       node.innerHTML = timestring(time);
-      node.setAttribute("transform", `rotate(-60 ${x} 720)`);
+      node.setAttribute("transform", `rotate(-60 ${x} 700)`);
       diagram.xticks.appendChild(node);
 
       let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
       line.setAttribute("x1", x);
-      line.setAttribute("y1", "700");
+      line.setAttribute("y1", "675");
       line.setAttribute("x2", x);
-      line.setAttribute("y2", "710");
+      line.setAttribute("y2", "685");
       diagram.xticks.appendChild(line);
     }
   }
