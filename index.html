@@ -159,6 +159,7 @@
     </table>
   </section>
   
+  
   <script id="vshader" type="x-shader/x-vertex">
     precision mediump float; attribute vec3 a_position; attribute vec4 a_color; uniform mat4 rot_matrix; uniform mat4 proj_matrix; varying vec4 vColor; void main() { gl_Position = proj_matrix * rot_matrix * vec4(a_position, 1.0); vColor = a_color; gl_PointSize = 5.0; }
   </script>

@@ -280,7 +280,7 @@ td:nth-child(3)::before {
 }
 
 td:nth-child(4)::before {
-  content: "Avarage:";
+  content: "Average:";
 }
 
 @media screen and (min-width: 440px) {
