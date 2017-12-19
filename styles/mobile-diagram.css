@@ -158,7 +158,7 @@ article {
   color: grey;
 }
 
-article>h3 {
+.latest-data h3 {
   margin-left: 1em;
   padding: 2px;
   border-bottom: 2px #444 solid;
@@ -282,6 +282,100 @@ td:nth-child(3)::before {
 td:nth-child(4)::before {
   content: "Average:";
 }
+.history {
+  position: relative;
+}
+.history::before {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: .2em;
+  background: #ee4d4d;
+  left: 2em;
+}
+
+.history article{
+  margin: 1.5em;
+  margin-left: 4em;
+  border-radius: .4em;
+  box-shadow: 0px 4px 2px 0px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.history article::before{
+  content: '';
+  z-index: 0;
+  box-sizing: border-box;
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  border-radius: 1em;
+  background: #ee4d4d;
+  left: 1.1em;
+  margin-top: .5em;
+}
+.history header {
+  padding: 0;
+  color: white;
+  background: #ee4d4d;
+}
+.history header::before {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border: .8em solid transparent;
+  border-right: .8em solid #ee4d4d;
+  left: 2.5em;
+  margin-top: .75em;
+}
+.history h3 {
+  padding: 0;
+  margin: .5em;
+  font-size: 1.5em;
+  font-variant: small-caps;
+  font-weight: 100;
+  display: inline-block;
+}
+.history time {
+  float: right;
+  font-size: .7em;
+  margin: 2em;
+}
+.history p {
+  margin: 1em;
+}
+.history img{
+  width: 90%;
+  margin: .5em 5%;
+}
+dt {
+  font-size: 1.3em;
+  margin: .5em 0 .2em 1em;
+}
+
+.history .finised {
+  position: relative;
+  margin: 0em;
+  overflow: inherit;
+}
+.history .finised::before {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-radius: 2em;
+  border: 2em solid transparent;
+  border-top: 2em solid #ee4d4d;
+  border-left: 2em solid #ee4d4d;
+  transform: rotate(45deg);
+  top: -2.5em;
+  left: .1em;
+}
+.finised img {
+  display: block;
+  width: 100%;
+  margin: auto;
+}
 
 @media screen and (min-width: 440px) {
   body {
@@ -395,7 +489,7 @@ td:nth-child(4)::before {
     margin: 4%;
     color: black;
   }
-  article>h3 {
+  .latest-data h3 {
     padding: 4em 0 0em;
     margin: 0;
     border: none;
