@@ -58,20 +58,16 @@ let diagram2dhandler;
   diagram.xticks = document.getElementById("x-labels");
   diagram.yticks = document.getElementById("y-labels");
   diagram.unit = document.getElementById("unit");
-  diagram.axis = document.getElementById("diagram2d").getElementsByClassName("axis");
+  diagram.axis = document.getElementsByClassName("axis");
   diagram.width = parseInt(diagram.axis[1].getAttribute("x2")) - parseInt(diagram.axis[1].getAttribute("x1"));
 
   diagram.height = parseInt(diagram.axis[0].getAttribute("y2")) - parseInt(diagram.axis[0].getAttribute("y1"));
   diagram.position.x = parseInt(diagram.axis[0].getAttribute("x1"));
   diagram.position.y = parseInt(diagram.axis[0].getAttribute("y2"));
-  diagram.d = function (e) {
-    document.getElementById("diagram-path").setAttribute("points", e);
-  };
   diagram.animLine =
     document.getElementById("diagram-path").getElementsByTagName("animate")[0];
   diagram.animArea =
     document.getElementById("diagram-area").getElementsByTagName("animate")[0];
-
   diagram.animLine.addEventListener("endEvent", function () {
     diagram.animLine.setAttribute("from", diagram.animLine.getAttribute("to"));
   }, false);
@@ -104,13 +100,15 @@ let diagram2dhandler;
       }
 
     }
-    let str = "";
-    for (let i = 0; i < this.v.datum.length; ++i) {
-      str += ` ${this.contime(this.v.datum[i])},${this.position.y - this.height/2}`;
+    if (this.animLine.beginElement) {
+      let str = "";
+      for (let i = 0; i < this.v.datum.length; ++i) {
+        str += ` ${this.contime(this.v.datum[i])},${this.position.y - this.height/2}`;
+      }
+
+      this.animLine.setAttribute("from", str);
+      this.animArea.setAttribute("from", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
     }
-    //this.d(str);
-    this.animLine.setAttribute("from", str);
-    this.animArea.setAttribute("from", str);
     this.makeLabels();
   }
 
@@ -121,34 +119,38 @@ let diagram2dhandler;
     for (let i = 0; i < this.v.datum.length; ++i) {
       str += this.con(diagram.v.method[e], i);
     }
+    if (this.animLine.beginElement) {
+      this.animLine.setAttribute("to", str);
+      this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
 
-    this.animLine.setAttribute("to", str);
-    this.animLine.beginElement();
-    this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
-    this.animArea.beginElement();
-
+      this.animArea.beginElement();
+      this.animLine.beginElement();
+    } else {
+      document.getElementById("diagram-path").setAttribute("points", str);
+      document.getElementById("diagram-area").setAttribute("points", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
+    }
     switch (e) {
-    case 0:
-      this.unit.textContent = "°C";
-      break;
-    case 1:
-      this.unit.textContent = "lux";
-      break;
-    case 2:
-      this.unit.textContent = "hPa";
-      break;
-    case 3:
-      this.unit.textContent = "µSv/h";
-      break;
-    case 4:
-      this.unit.textContent = "km/h";
-      break;
-    case 5:
-      this.unit.textContent = "%";
-      break;
-    case 6:
-      this.unit.textContent = "V";
-      break;
+      case 0:
+        this.unit.textContent = "°C";
+        break;
+      case 1:
+        this.unit.textContent = "lux";
+        break;
+      case 2:
+        this.unit.textContent = "hPa";
+        break;
+      case 3:
+        this.unit.textContent = "µSv/h";
+        break;
+      case 4:
+        this.unit.textContent = "km/h";
+        break;
+      case 5:
+        this.unit.textContent = "%";
+        break;
+      case 6:
+        this.unit.textContent = "V";
+        break;
     }
     this.ticksY(e);
   }
