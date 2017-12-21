@@ -177,8 +177,9 @@ let diagram3dhandler = {
     this.txtCanvas.font = "20px monospace";
     this.txtCanvas.textAlign = "center";
     this.txtCanvas.textBaseline = "middle";
-    this.txtCanvas.fillStyle = "black";
-    this.txtCanvas.clearRect(0, 0, w, h);
+    this.txtCanvas.fillStyle = "#9b59b6";
+    this.txtCanvas.fillRect(0, 0, w, h, );
+    this.txtCanvas.fillStyle = "#ecf0f1";
     this.txtCanvas.fillText(txt, w / 2, h / 2);
     return this.txtCanvas.canvas;
   },
@@ -202,13 +203,15 @@ let diagram3dhandler = {
                0, 0, 1, 0,
                0, 0, 0, 1];
 
-    this.x = -90,
+    this.x = 270,
       this.y = 0;
     let dif = 2;
 
     this.matrixProjection = this.gl.getUniformLocation(this.program, "proj_matrix");
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
     this.data();
+    
+    
     
     //Label init
     this.txtCanvas = document.createElement("canvas").getContext("2d");
@@ -230,6 +233,10 @@ let diagram3dhandler = {
     this.txttex = this.gl.getUniformLocation(this.txtprogram, "u_texture");
     this.TexDay = [];
     this.TexHour = [];
+    
+    this.xaxis = [];
+    this.yaxis = [];
+    
     for(let i = 0; i < this.days.length; ++i) {
       let canvas = this.makeTexture(`${this.days[i].getDate()}.${this.days[i].getMonth()+1}`, 100, 26);
       let textWidth  = this.txtCanvas.width;
@@ -244,7 +251,7 @@ let diagram3dhandler = {
     }
     let numoflabels = 4;
     for(let j = 0; j <= numoflabels; ++j) {
-      let canvas = this.makeTexture(24/numoflabels*j, 100, 26);
+      let canvas = this.makeTexture(24/numoflabels*j + ":00", 100, 26);
       let textWidth  = this.txtCanvas.width;
       let textHeight = this.txtCanvas.height;
       this.TexHour[j] = this.gl.createTexture();
@@ -255,6 +262,9 @@ let diagram3dhandler = {
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
     }
+    
+    //Axis init
+    this.axisvertex_buffer = this.gl.createBuffer();
   },
   drawAxis: function () {
     this.gl.useProgram(this.txtprogram);
@@ -270,7 +280,7 @@ let diagram3dhandler = {
       this.gl.uniformMatrix4fv(this.txtmatrixRotation, false, this.rotmat);
       this.gl.uniformMatrix4fv(this.txtmatrixProjection, false, this.promat);
       this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.5 + i/length, -.6, -.5));
-      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(-90), mul(rotationX(-90), scale(.1,.026))));
+      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 0 && this.y < 180? 270 : 90), mul(rotationX(180-this.x), scale(.1,.026))));
 
 
       this.gl.uniform1i(this.txttex, 0);
@@ -282,8 +292,9 @@ let diagram3dhandler = {
     for(let i = 0; i < length; ++i) {
       this.gl.uniformMatrix4fv(this.txtmatrixRotation, false, this.rotmat);
       this.gl.uniformMatrix4fv(this.txtmatrixProjection, false, this.promat);
-      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.6, -.5 + i/length, -.5));
-      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(0), mul(rotationX(-90), scale(.1,.026))));
+      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.6, -.5 + i/(length-1), -.5));
+      
+      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 90 && this.y < 270? 180:0), mul(rotationX(180-this.x), scale(.1,.026))));
 
 
       this.gl.uniform1i(this.txttex, 0);
@@ -292,10 +303,9 @@ let diagram3dhandler = {
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
   },
-  draw: function (idx) {
+  draw: function (idx) {    
     this.rotmat = mul(translate(0, 0, -2.5), mul(rotationX(this.x), mul(rotationY(this.y), this.stdmatrix)));
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
-    
     
     this.gl.useProgram(this.program);
     if (this.gl.canvas.width !== this.canvas.clientWidth) this.canvas.width = this.gl.canvas.clientWidth;
@@ -316,11 +326,12 @@ let diagram3dhandler = {
 
     //gl.clearColor(0.5, 0.2, 0.5, 0.9); //lila
     //this.gl.clearColor(.2, .28, .36, 1.0); //d-blue
-    this.gl.clearColor(.086, .627, .522,1.0); //green
+    //this.gl.clearColor(.086, .627, .522,1.0); //green
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-
+    this.gl.enable(this.gl.BLEND);
+    //this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     
 
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
@@ -331,9 +342,10 @@ let diagram3dhandler = {
   beginrotate: function () {
     let that = this;
     this.interval = setInterval(function () {
-      that.y += 2;
+      that.y += 1;
+      that.y = normalize(that.y);
       that.draw();
-    }, 50);
+    }, 30);
   },
   endrotate: function () {
     if (this.interval) clearInterval(this.interval);
@@ -356,8 +368,10 @@ let diagram3dhandler = {
     });
     this.canvas.addEventListener("mousemove", function (e) {
       if (!mousedown) return;
-      that.y += e.movementX / 2 * 2;
-      that.x += e.movementY / 2 * 2;
+      that.y += e.movementX;
+      that.x += e.movementY;
+      that.x = normalize(that.x);
+      that.y = normalize(that.y);
       that.draw();
     });
     let touchpos;
@@ -371,8 +385,10 @@ let diagram3dhandler = {
       let dx = e.changedTouches[0].clientX - touchpos[0];
       let dy = e.changedTouches[0].clientY - touchpos[1];
       touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
-      that.y += dx / 2 * 2;
-      that.x += dy / 2 * 2;
+      that.y += dx;
+      that.x += dy;
+      that.y = normalize(that.y);
+      that.x = normalize(that.x);
       that.draw();
       e.preventDefault();
     });
@@ -397,6 +413,12 @@ function rotationX(angle) {
       0, -s, c, 0,
       0, 0, 0, 1
     ];
+}
+
+function normalize(angle) {
+  angle = angle % 360;
+  if(angle < 0 ) return 360 +angle;
+  return angle;
 }
 
 function rotationY(angle) {
