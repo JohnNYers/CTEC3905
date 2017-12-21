@@ -18,10 +18,11 @@ According to this wireframe, following tasks had to be considered:
   - [x] write shader programs to colour the vertices
   - [x] include basic matrix multiplications to accomplish rotations according to a user input or automatically after three seconds.
   - [x] include a projection matrix
+  - [] include labeling and axis
 - [x] Responiveness of the site through CSS
   - [x] making a table look nice on a mobile device without loosing information
   - [x] general repositioning and changed behaviour of elements
-- [] History as content
+- [x] History as content
 
 ## The site in more detail
 The website is a single-page-app (index.html). When this page is loaded, data is requested via ajax from the localhost (127.0.0.1:12346). On this socket, the C# program [ProxyWebServer](./Proxy/ProxyWebServer) listens and forwards the requests the weather server located at http://wetter-maulburg.de and returns the response with a new header to avoid same-origin-policy problems (Workaround). If the local server is not responding (or not started) the website will display [example data](./js/json.js) and will show the user that a problem occured (alert message). JavaScript injects the gathered data at specific points in the DOM (table, latest values, diagrams) to build the webpage.
