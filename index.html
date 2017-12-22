@@ -4,10 +4,11 @@
 <head>
   <meta charset="utf-8"> 
   <meta name="author" content="John Ba">
-  <link rel="stylesheet" href="styles/mobile-diagram.css">
+  <link rel="stylesheet" href="styles/main.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Data visualization of the weatherstation in Maulburg developed by Studium plus.">
   <meta name="keywords" content="Weather Station, Maulburg, Studium plus">
+  <title>Weather-Maulburg</title>
 </head>
 
 <body>
@@ -32,7 +33,7 @@
     </nav>
 
     <figure>
-      <svg id="diagram2d" class="chart" viewBox="0 0 1000 800">
+      <svg id="diagram2d" class="chart active" viewBox="0 0 1000 800">
         <line class="axis" x1="75" y1="75" x2="75" y2="675"></line>
         <line class="axis" x1="75" y1="675" x2="950" y2="675"></line>
         <g id="x-labels" class="label"></g>
@@ -48,12 +49,12 @@
         </g>
       </svg>
 
-      <canvas id="diagram3d" class="chart active" width="300" height="300"></canvas>
+      <canvas id="diagram3d" class="chart" width="300" height="300"></canvas>
     </figure>
   </section>
   <section class="latest-data">
     <h2>latest data
-      <time id="last-time"></time>
+      <time id="last-time">2017-12-22 12:00:26</time>
     </h2>
     <article id="pressure">
 
@@ -165,7 +166,7 @@
     <article>
       <header>
         <h3>Instruments</h3>
-        <time>Oct 2016</time>
+        <time datetime="2016-10">Oct 2016</time>
       </header>
 
       <dl>
@@ -198,7 +199,7 @@
     <article>
       <header>
         <h3>Electronics</h3>
-        <time>Nov 2016</time>
+        <time datetime="2016-11">Nov 2016</time>
       </header>
 
       <ul>
@@ -213,7 +214,7 @@
     <article>
       <header>
         <h3>IT</h3>
-        <time>Dec 2016</time>
+        <time datetime="2016-12">Dec 2016</time>
       </header>
 
       <ul>
@@ -226,7 +227,7 @@
     <article>
       <header>
         <h3>Website</h3>
-        <time>Dec 2017</time>
+        <time datetime="2017-12">Dec 2017</time>
       </header>
 
       <p>

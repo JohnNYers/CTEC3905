@@ -483,8 +483,8 @@ function d2r(d) {
  * @returns {object} rotation matrix
  */
 function rotationX(angle) {
-  let c = Math.cos(r2d(angle));
-  let s = Math.sin(r2d(angle));
+  let c = Math.cos(d2r(angle));
+  let s = Math.sin(d2r(angle));
   return [
       1, 0, 0, 0,
       0, c, s, 0,
@@ -504,8 +504,8 @@ function normalize(angle) {
  * @returns {object} rotation matrix
  */
 function rotationY(angle) {
-  let c = Math.cos(r2d(angle));
-  let s = Math.sin(r2d(angle));
+  let c = Math.cos(d2r(angle));
+  let s = Math.sin(d2r(angle));
   return [
       c, s, 0, 0,
       -s, c, 0, 0,
