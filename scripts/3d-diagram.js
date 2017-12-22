@@ -4,19 +4,43 @@ let points = [];
 let colors = [];
 let numbervalues;
 
+/**
+ * Helper function: calculates maximum of two numbers
+ * @param   {number} a number1
+ * @param   {number} b number2
+ * @returns {number} maximum of number1 or number2
+ */
 function max(a, b) {
   return a < b ? b : a;
 }
 
+/**
+ * Helper function: calculates minimum of two numbers
+ * @param   {number} a number1
+ * @param   {number} b number2
+ * @returns {number} minimum of number1 or number2
+ */
 function min(a, b) {
   return a > b ? b : a;
 }
 
+/**
+ * Calculates the distance of two points (tupels) in different y's.
+ * @param   {object} a  tupel1.
+ * @param   {object} b  tupel2.
+ * @param   {number} dy y distance of the two points.
+ * @returns {number} distance of the tupels.
+ */
 function distance(a, b, dy) {
   let dx = a[0] - b[0];
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+/**
+ * Constructs a line array out of the point cloud.
+ * @param   {object} p array of points.
+ * @returns {object} array of lines.
+ */
 function linearize(p) {
   let y = [];
   let count = 0;
@@ -57,6 +81,14 @@ function linearize(p) {
   return y;
 }
 
+/**
+ * Smooting the points (2d). Used for minimizing fluctuation, especially in the gamma and wind case useful.
+ * @param   {object} p points 2d.
+ * @param   {number} e search domain radius.
+ * @param   {number} d minimal distance of recognition.
+ * @param   {object} b Bound object for normalizing.
+ * @returns {object} smoothed points.
+ */
 function smooth(p, e, d, b) {
 
   if (!d) d = 0.02;
@@ -82,6 +114,9 @@ function smooth(p, e, d, b) {
   return y;
 }
 
+/**
+ * Parsing d3data array to point cloud and calculating Bound of measurement variables.
+ */
 function parse3d() {
   diagram3dhandler.days = [];
 
@@ -130,6 +165,12 @@ function parse3d() {
     }
   }
 
+  /**
+   * Calculating color of vertex
+   * @param {number} c value
+   * @param {number} i array index (1st dim)
+   * @param {number} v array index (2nd dim)
+   */
   function getcolor(c, i, v) {
     if (!colors[v]) colors[v] = [];
     let indexes = [
@@ -159,6 +200,9 @@ function parse3d() {
 }
 
 let diagram3dhandler = {
+  /**
+   * Inits 3d diagram data (buffers).
+   */
   data: function () {
     parse3d();
     this.vertex_buffer = [];
@@ -174,6 +218,13 @@ let diagram3dhandler = {
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(colors[i]), this.gl.STATIC_DRAW);
     }
   },
+  /**
+   * Constructs a texture by using a 2d context of a canvas.
+   * @param   {string} txt text on texture.
+   * @param   {number} w   width of the texture.
+   * @param   {number} h   height of the texture.
+   * @returns {object} canvas (Texture).
+   */
   makeTexture: function (txt, w, h) {
     this.txtCanvas.canvas.width = w;
     this.txtCanvas.canvas.height = h;
@@ -186,6 +237,9 @@ let diagram3dhandler = {
     this.txtCanvas.fillText(txt, w / 2, h / 2);
     return this.txtCanvas.canvas;
   },
+  /**
+   * Inits 3d diagram
+   */
   init: function () {
     let value = 0;
     this.canvas = document.getElementById("diagram3d");
@@ -270,6 +324,9 @@ let diagram3dhandler = {
     this.axisvertex_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.axisvertex_buffer);
   },
+  /**
+   * Drawing axis and labels.
+   */
   drawAxis: function () {
     this.gl.useProgram(this.txtprogram);
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.txtvertex_buffer);
@@ -307,6 +364,10 @@ let diagram3dhandler = {
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
   },
+  /**
+   * Drawing data to diagram.
+   * @param {number} idx index of measurement value.
+   */
   draw: function (idx) {
     this.rotmat = mul(translate(0, 0, -3), mul(rotationX(this.x), mul(rotationY(this.y), this.stdmatrix)));
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 5);
@@ -327,21 +388,19 @@ let diagram3dhandler = {
 
     this.gl.uniformMatrix4fv(this.matrixRotation, false, this.rotmat);
     this.gl.uniformMatrix4fv(this.matrixProjection, false, this.promat);
-
-    //gl.clearColor(0.5, 0.2, 0.5, 0.9); //lila
-    //this.gl.clearColor(.2, .28, .36, 1.0); //d-blue
-    //this.gl.clearColor(.086, .627, .522,1.0); //green
+    
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.BLEND);
-    //this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-
 
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     this.gl.drawArrays(this.gl.LINES, 0, parseInt(points[this.index].length / 3));
     this.drawAxis();
   },
+  /**
+   * Starts rotating 3d diagram.
+   */
   beginrotate: function () {
     let that = this;
     this.interval = setInterval(function () {
@@ -350,9 +409,15 @@ let diagram3dhandler = {
       that.draw();
     }, 30);
   },
+  /**
+   * Ends rotating 3d diagram.
+   */
   endrotate: function () {
     if (this.interval) clearInterval(this.interval);
   },
+  /**
+   * Adds mouse and touch events for rotating the 3d diagram (altering the look angle for changing the perspective).
+   */
   addevents: function () {
     let mousedown = false;
     let that = this;
@@ -403,10 +468,20 @@ let diagram3dhandler = {
   }
 };
 
-function r2d(r) {
-  return r / 180 * Math.PI;
+/**
+ * Maps degrees to radian for easyer understanding of angles.
+ * @param   {number} d angle in degrees
+ * @returns {number} angle in radian
+ */
+function d2r(d) {
+  return d / 180 * Math.PI;
 }
 
+/**
+ * Constructs a rotation matrix (X dimenstion)
+ * @param   {number} angle rotation angle
+ * @returns {object} rotation matrix
+ */
 function rotationX(angle) {
   let c = Math.cos(r2d(angle));
   let s = Math.sin(r2d(angle));
@@ -423,7 +498,11 @@ function normalize(angle) {
   if (angle < 0) return 360 + angle;
   return angle;
 }
-
+/**
+ * Constructs a rotation matrix (Y dimenstion)
+ * @param   {number} angle rotation angle
+ * @returns {object} rotation matrix
+ */
 function rotationY(angle) {
   let c = Math.cos(r2d(angle));
   let s = Math.sin(r2d(angle));
@@ -434,7 +513,13 @@ function rotationY(angle) {
       0, 0, 0, 1
     ];
 }
-
+/**
+ * Constructs translation matrix (homogene coordinates)
+ * @param   {number} x translation in x direction
+ * @param   {number} y translation in y direction
+ * @param   {number} z translation in z direction
+ * @returns {Array}  translation matrix
+ */
 function translate(x, y, z) {
   return [
       1, 0, 0, 0,
@@ -444,6 +529,12 @@ function translate(x, y, z) {
     ];
 }
 
+/**
+ * Constructs scale matrix
+ * @param   {number} x scale in x direction.
+ * @param   {number} y scale in y direction.
+ * @returns {Array}  scale matrix.
+ */
 function scale(x, y) {
   return [
     x, 0, 0, 0,
@@ -453,6 +544,14 @@ function scale(x, y) {
   ];
 }
 
+/**
+ * Constructs projection matrix.
+ * @param   {number} fov  field of view in degrees.
+ * @param   {number} ar   aspect ration of canvas.
+ * @param   {number} near clipping plane of frustum.
+ * @param   {number} far  clipping plane of frustum.
+ * @returns {Array}  projection matrix.
+ */
 function makeproj(fov, ar, near, far) {
   let f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
   let rangeInv = 1 / (near - far);
@@ -465,6 +564,12 @@ function makeproj(fov, ar, near, far) {
   ];
 }
 
+/**
+ * Calculates a matrix multiplication.
+ * @param   {Array} a matrix1.
+ * @param   {Array} b marix2.
+ * @returns {Array} b*a. 
+ */
 function mul(a, b) {
   return [
     b[0] * a[0] + b[1] * a[4] + b[2] * a[8] + b[3] * a[12],
@@ -486,6 +591,12 @@ function mul(a, b) {
   ];
 }
 
+/**
+ * Helper function to extrect shader program from html code.
+ * @param   {object} gl web-gl obj.
+ * @param   {string} id of shader code.
+ * @returns {object} shader.
+ */
 function getshader(gl, id) {
   let elem = document.getElementById(id);
   let type = elem.getAttribute("type") === "x-shader/x-vertex" ? gl.VERTEX_SHADER : gl.FRAGMENT_SHADER;
@@ -499,6 +610,12 @@ function getshader(gl, id) {
   return shader;
 }
 
+/**
+ * Helper function to link shaders to a program.
+ * @param   {object} gl  web-l obj.
+ * @param   {Array}  ids of shaders (e.g. vertex shader and fragment shader).
+ * @returns {object} linked program.
+ */
 function shaderprogram(gl, ids) {
   var program = gl.createProgram();
   for (let i = 0; i < ids.length; ++i) {
