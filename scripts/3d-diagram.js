@@ -1,3 +1,5 @@
+'use strict';
+
 let points = [];
 let colors = [];
 let numbervalues;
@@ -23,11 +25,11 @@ function linearize(p) {
     for (let j = 0; j < p.length; ++j) {
       let ls = 0;
       let rs = 0;
-      if(!p[j]) continue;
+      if (!p[j]) continue;
       for (let i = 0; i < p[j][v].length; ++i) {
-        if(j > 0) {
+        if (j > 0) {
           let d = Infinity;
-          if(!p[j-1]) continue;
+          if (!p[j - 1]) continue;
           for (let z = ls; z < p[j - 1][v].length; ++z) {
             let dd = distance(p[j][0][i], p[j - 1][0][z], j / 7);
             if (dd <= d) {
@@ -56,10 +58,10 @@ function linearize(p) {
 }
 
 function smooth(p, e, d, b) {
-  
+
   if (!d) d = 0.02;
   if (!e) e = 5;
-  
+
   let y = [];
   for (let v = 0; v < numbervalues; ++v) {
     y[v] = [];
@@ -82,25 +84,26 @@ function smooth(p, e, d, b) {
 
 function parse3d() {
   diagram3dhandler.days = [];
+
   function Bound() {
     this.min = Infinity,
       this.max = 0
   }
   numbervalues = 7;
   let otime = new Date(d3data[0].datum).getTime();
-  
+
   let p = [];
   let bounds = [];
-  for(let i = 0; i < numbervalues; ++i) {
+  for (let i = 0; i < numbervalues; ++i) {
     bounds[i] = new Bound();
   }
   for (let i = 0; i < d3data.length; ++i) {
     let tdif = new Date(d3data[i].datum).getTime() - otime;
     let index = parseInt(tdif / 86400000);
-    
-    if(!p[index]) {
+
+    if (!p[index]) {
       p[index] = [[], [[], [], [], [], [], [], []]];
-      diagram3dhandler.days[index] = new Date(d3data[i].datum); 
+      diagram3dhandler.days[index] = new Date(d3data[i].datum);
     }
     p[index][0].push(tdif % 86400000 / 86400000 - 0.5);
 
@@ -112,9 +115,9 @@ function parse3d() {
     p[index][1][5].push(parseFloat(d3data[i]["feuchte"]));
     p[index][1][6].push(parseFloat(d3data[i]["akku"]));
   }
-  
+
   for (let i = 0; i < p.length; ++i) {
-    if(!p[i]) continue;
+    if (!p[i]) continue;
     p[i] = smooth(p[i], 5, 0.005, bounds);
   }
 
@@ -172,7 +175,7 @@ let diagram3dhandler = {
     }
   },
   makeTexture: function (txt, w, h) {
-    this.txtCanvas.canvas.width  = w;
+    this.txtCanvas.canvas.width = w;
     this.txtCanvas.canvas.height = h;
     this.txtCanvas.font = "20px monospace";
     this.txtCanvas.textAlign = "center";
@@ -195,7 +198,7 @@ let diagram3dhandler = {
       }
     }
     this.program = shaderprogram(this.gl, ["vshader", "fshader"]);
-    
+
 
     this.matrixRotation = this.gl.getUniformLocation(this.program, "rot_matrix");
     this.stdmatrix = [1, 0, 0, 0,
@@ -210,21 +213,21 @@ let diagram3dhandler = {
     this.matrixProjection = this.gl.getUniformLocation(this.program, "proj_matrix");
     this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
     this.data();
-    
-    
-    
+
+
+
     //Label init
     this.txtCanvas = document.createElement("canvas").getContext("2d");
     this.txtprogram = shaderprogram(this.gl, ["txtvshader", "txtfshader"]);
     this.txtvertex_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.txtvertex_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(
-      [-1,1,0,  0,1,
-       1,1,0,   1,1,
-      -1,-1,0,  0,0,
-       1,1,0,   1,1,
-       1,-1,0,  1,0,
-       -1,-1,0, 0,0  
+      [-1, 1, 0, 0, 1,
+       1, 1, 0, 1, 1,
+      -1, -1, 0, 0, 0,
+       1, 1, 0, 1, 1,
+       1, -1, 0, 1, 0,
+       -1, -1, 0, 0, 0
       ]), this.gl.STATIC_DRAW);
     this.txtmatrixRotation = this.gl.getUniformLocation(this.txtprogram, "rot_matrix");
     this.txtmatrixProjection = this.gl.getUniformLocation(this.txtprogram, "proj_matrix");
@@ -233,13 +236,13 @@ let diagram3dhandler = {
     this.txttex = this.gl.getUniformLocation(this.txtprogram, "u_texture");
     this.TexDay = [];
     this.TexHour = [];
-    
+
     this.xaxis = [];
     this.yaxis = [];
-    
-    for(let i = 0; i < this.days.length; ++i) {
+
+    for (let i = 0; i < this.days.length; ++i) {
       let canvas = this.makeTexture(`${this.days[i].getDate()}.${this.days[i].getMonth()+1}`, 100, 26);
-      let textWidth  = this.txtCanvas.width;
+      let textWidth = this.txtCanvas.width;
       let textHeight = this.txtCanvas.height;
       this.TexDay[i] = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.TexDay[i]);
@@ -250,9 +253,9 @@ let diagram3dhandler = {
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
     }
     let numoflabels = 4;
-    for(let j = 0; j <= numoflabels; ++j) {
-      let canvas = this.makeTexture(24/numoflabels*j + ":00", 100, 26);
-      let textWidth  = this.txtCanvas.width;
+    for (let j = 0; j <= numoflabels; ++j) {
+      let canvas = this.makeTexture(24 / numoflabels * j + ":00", 100, 26);
+      let textWidth = this.txtCanvas.width;
       let textHeight = this.txtCanvas.height;
       this.TexHour[j] = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.TexHour[j]);
@@ -262,9 +265,10 @@ let diagram3dhandler = {
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
     }
-    
+
     //Axis init
     this.axisvertex_buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.axisvertex_buffer);
   },
   drawAxis: function () {
     this.gl.useProgram(this.txtprogram);
@@ -273,14 +277,14 @@ let diagram3dhandler = {
     this.gl.vertexAttribPointer(coord, 3, this.gl.FLOAT, false, 5 * Float32Array.BYTES_PER_ELEMENT, 0);
     this.gl.enableVertexAttribArray(coord);
     let texcoord = this.gl.getAttribLocation(this.txtprogram, "a_txtpos");
-    this.gl.vertexAttribPointer(texcoord, 2, this.gl.FLOAT, false, 5* Float32Array.BYTES_PER_ELEMENT, 3* Float32Array.BYTES_PER_ELEMENT);
+    this.gl.vertexAttribPointer(texcoord, 2, this.gl.FLOAT, false, 5 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
     this.gl.enableVertexAttribArray(texcoord);
     let length = this.days.length;
-    for(let i = 0; i < length; ++i) {
+    for (let i = 0; i < length; ++i) {
       this.gl.uniformMatrix4fv(this.txtmatrixRotation, false, this.rotmat);
       this.gl.uniformMatrix4fv(this.txtmatrixProjection, false, this.promat);
-      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.5 + i/length, -.6, -.5));
-      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 0 && this.y < 180? 270 : 90), mul(rotationX(180-this.x), scale(.1,.026))));
+      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.5 + i / length, -.6, -.5));
+      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 0 && this.y < 180 ? 270 : 90), mul(rotationX(180 - this.x), scale(.1, .026))));
 
 
       this.gl.uniform1i(this.txttex, 0);
@@ -289,12 +293,12 @@ let diagram3dhandler = {
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
     length = this.TexHour.length;
-    for(let i = 0; i < length; ++i) {
+    for (let i = 0; i < length; ++i) {
       this.gl.uniformMatrix4fv(this.txtmatrixRotation, false, this.rotmat);
       this.gl.uniformMatrix4fv(this.txtmatrixProjection, false, this.promat);
-      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.6, -.5 + i/(length-1), -.5));
-      
-      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 90 && this.y < 270? 180:0), mul(rotationX(180-this.x), scale(.1,.026))));
+      this.gl.uniformMatrix4fv(this.txtmatrixTranslation, false, translate(-.6, -.5 + i / (length - 1), -.5));
+
+      this.gl.uniformMatrix4fv(this.txtmatrixLocal, false, mul(rotationY(this.y > 90 && this.y < 270 ? 180 : 0), mul(rotationX(180 - this.x), scale(.1, .026))));
 
 
       this.gl.uniform1i(this.txttex, 0);
@@ -303,10 +307,10 @@ let diagram3dhandler = {
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
   },
-  draw: function (idx) {    
-    this.rotmat = mul(translate(0, 0, -2.5), mul(rotationX(this.x), mul(rotationY(this.y), this.stdmatrix)));
-    this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 3.5);
-    
+  draw: function (idx) {
+    this.rotmat = mul(translate(0, 0, -3), mul(rotationX(this.x), mul(rotationY(this.y), this.stdmatrix)));
+    this.promat = makeproj(Math.PI * .21, this.canvas.width / this.canvas.height, 1.5, 5);
+
     this.gl.useProgram(this.program);
     if (this.gl.canvas.width !== this.canvas.clientWidth) this.canvas.width = this.gl.canvas.clientWidth;
     if (this.gl.canvas.height !== this.canvas.clientHeight) this.canvas.height = this.gl.canvas.clientHeight;
@@ -320,7 +324,7 @@ let diagram3dhandler = {
     let col = this.gl.getAttribLocation(this.program, "a_color");
     this.gl.vertexAttribPointer(col, 4, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(col);
-    
+
     this.gl.uniformMatrix4fv(this.matrixRotation, false, this.rotmat);
     this.gl.uniformMatrix4fv(this.matrixProjection, false, this.promat);
 
@@ -332,12 +336,11 @@ let diagram3dhandler = {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.BLEND);
     //this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-    
+
 
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     this.gl.drawArrays(this.gl.LINES, 0, parseInt(points[this.index].length / 3));
     this.drawAxis();
-    
   },
   beginrotate: function () {
     let that = this;
@@ -417,7 +420,7 @@ function rotationX(angle) {
 
 function normalize(angle) {
   angle = angle % 360;
-  if(angle < 0 ) return 360 +angle;
+  if (angle < 0) return 360 + angle;
   return angle;
 }
 
@@ -441,7 +444,7 @@ function translate(x, y, z) {
     ];
 }
 
-function scale(x,y) {
+function scale(x, y) {
   return [
     x, 0, 0, 0,
     0, y, 0, 0,
@@ -463,56 +466,24 @@ function makeproj(fov, ar, near, far) {
 }
 
 function mul(a, b) {
-  var a00 = a[0 * 4 + 0];
-  var a01 = a[0 * 4 + 1];
-  var a02 = a[0 * 4 + 2];
-  var a03 = a[0 * 4 + 3];
-  var a10 = a[1 * 4 + 0];
-  var a11 = a[1 * 4 + 1];
-  var a12 = a[1 * 4 + 2];
-  var a13 = a[1 * 4 + 3];
-  var a20 = a[2 * 4 + 0];
-  var a21 = a[2 * 4 + 1];
-  var a22 = a[2 * 4 + 2];
-  var a23 = a[2 * 4 + 3];
-  var a30 = a[3 * 4 + 0];
-  var a31 = a[3 * 4 + 1];
-  var a32 = a[3 * 4 + 2];
-  var a33 = a[3 * 4 + 3];
-  var b00 = b[0 * 4 + 0];
-  var b01 = b[0 * 4 + 1];
-  var b02 = b[0 * 4 + 2];
-  var b03 = b[0 * 4 + 3];
-  var b10 = b[1 * 4 + 0];
-  var b11 = b[1 * 4 + 1];
-  var b12 = b[1 * 4 + 2];
-  var b13 = b[1 * 4 + 3];
-  var b20 = b[2 * 4 + 0];
-  var b21 = b[2 * 4 + 1];
-  var b22 = b[2 * 4 + 2];
-  var b23 = b[2 * 4 + 3];
-  var b30 = b[3 * 4 + 0];
-  var b31 = b[3 * 4 + 1];
-  var b32 = b[3 * 4 + 2];
-  var b33 = b[3 * 4 + 3];
   return [
-      b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
-      b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
-      b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
-      b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
-      b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
-      b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
-      b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
-      b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
-      b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
-      b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
-      b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
-      b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
-      b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
-      b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
-      b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
-      b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
-    ];
+    b[0] * a[0] + b[1] * a[4] + b[2] * a[8] + b[3] * a[12],
+    b[0] * a[1] + b[1] * a[5] + b[2] * a[9] + b[3] * a[13],
+    b[0] * a[2] + b[1] * a[6] + b[2] * a[10] + b[3] * a[14],
+    b[0] * a[3] + b[1] * a[7] + b[2] * a[11] + b[3] * a[15],
+    b[4] * a[0] + b[5] * a[4] + b[6] * a[8] + b[7] * a[12],
+    b[4] * a[1] + b[5] * a[5] + b[6] * a[9] + b[7] * a[13],
+    b[4] * a[2] + b[5] * a[6] + b[6] * a[10] + b[7] * a[14],
+    b[4] * a[3] + b[5] * a[7] + b[6] * a[11] + b[7] * a[15],
+    b[8] * a[0] + b[9] * a[4] + b[10] * a[8] + b[11] * a[12],
+    b[8] * a[1] + b[9] * a[5] + b[10] * a[9] + b[11] * a[13],
+    b[8] * a[2] + b[9] * a[6] + b[10] * a[10] + b[11] * a[14],
+    b[8] * a[3] + b[9] * a[7] + b[10] * a[11] + b[11] * a[15],
+    b[12] * a[0] + b[13] * a[4] + b[14] * a[8] + b[15] * a[12],
+    b[12] * a[1] + b[13] * a[5] + b[14] * a[9] + b[15] * a[13],
+    b[12] * a[2] + b[13] * a[6] + b[14] * a[10] + b[15] * a[14],
+    b[12] * a[3] + b[13] * a[7] + b[14] * a[11] + b[15] * a[15],
+  ];
 }
 
 function getshader(gl, id) {

@@ -1,5 +1,10 @@
+'use strict';
+
 let diagram2dhandler;
-! function () {
+/**
+* Inits the diagram2dhandler.
+*/
+!function () {
   let diagram = {
     position: {
       x: 0,
@@ -75,17 +80,39 @@ let diagram2dhandler;
     diagram.animArea.setAttribute("from", diagram.animArea.getAttribute("to"));
   }, false);
 
+  /**
+   * Constructs the value for the time. 
+   * Mapping for time values to pixel values in the svg.
+   * @param   {number} t UNIX time.
+   * @returns {number} ordinate of time in the diagram.
+   */
   diagram.contime = function (t) {
     return ((t - this.v.dmin) * this.width / (this.v.dmax - this.v.dmin) + this.position.x);
   }
 
+  /**
+   * Constructs the y value of a specific measurement 'x'.
+   * @param   {object}   e measurement array (diagram.v[]).
+   * @param   {number} x current value of measurement.
+   * @returns {number} ordinate of y-value.
+   */
   diagram.conx = function (e, x) {
     return (this.position.y - (e.max - e.min !== 0 ? (x - e.min) * this.height / (e.max - e.min) : 0));
   }
+  /**
+   * Constructs the coordinate tupel as string for measurement 'i'
+   * @param   {object}   e measurement array (diagram.v[]).
+   * @param   {number} i index of current measurement in the array e.
+   * @returns {string} coordinate tupel of measurement.
+   */
   diagram.con = function (e, i) {
     return ` ${this.contime(this.v.datum[i])},${this.conx(e, e.data[i])}`;
   }
 
+  /**
+   * Initializing data array.
+   * reads data from variable d3data and constructs the datastructure for further calculations.
+   */
   diagram.init = function () {
     for (let i = 0; i < d3data.length; ++i) {
       let date = new Date(d3data[i].datum).getTime();
@@ -114,6 +141,10 @@ let diagram2dhandler;
 
 
 
+  /**
+   * Renders a specific measurement in the diagram.
+   * @param {number} e specifying the next rendering index of the measurement array v[]
+   */
   diagram.build = function (e) {
     let str = "";
     for (let i = 0; i < this.v.datum.length; ++i) {
@@ -157,12 +188,21 @@ let diagram2dhandler;
 
 
 
+  
+  /**
+   * Adds labels to y-axis
+   * @param   {number}   e index of measurement array v[].
+   */
   diagram.ticksY = function (e) {
     while (this.yticks.firstChild) {
       this.yticks.removeChild(this.yticks.firstChild);
     }
     let m = diagram.v.method[e];
-
+    /**
+    * Constructs y-axis labels which are convenient (1, 2 or 5er steps)
+    * @param   {number} range maximum range of the y-axis
+    * @returns {number} interval of y ticks (tick(i+1) - tick(i) in local space)
+    */
     function ticks(range) {
       let s = 10 ** (Math.floor(Math.log10(range / 10)));
       let interval = [s, 2 * s, 5 * s];
@@ -200,7 +240,27 @@ let diagram2dhandler;
     }
   }
 
+  /**
+   * Constructs x-axis labels which are convenient.
+   */
   diagram.makeLabels = function () {
+    /*
+    * interval steps for calculating conveninet time interval:
+    * start should be 1000(ms)
+    * ->times 1 => 1 second
+    * ->times 15 => 15 seconds
+    * ->times 2 => 30 seconds
+    * ->times 2 => 1 minute
+    * ->times 15 => 15 minutes
+    * ->times 2 => 30 minutes
+    * ->times 2 => 1 hour
+    * ->times 6 => 6 hours
+    * ->times 2 => 12 hours
+    * ->times 2 => 1 day
+    * ->times 7 => 1 week //should be the last valid number. following only for the sake of completeness
+    * ->times 4 => 1 month (apprx.)
+    * ->times 12 => 1 year (apprx.)
+    */
     let interval = [1, 15, 2,
                   2, 15, 2,
                   2, 6, 2,
@@ -208,10 +268,21 @@ let diagram2dhandler;
                   4,
                   12];
 
+    /**
+     * Constructs a readable timestring from a date object.
+     * @param   {object} t Date object.
+     * @returns {string} readable timestring.
+     */
     function timestring(t) {
       return `${t.getDate()}.${t.getMonth()+1} ${t.getHours()}:${t.getMinutes()}`;
     }
 
+    /**
+     * Calculates the best matching interval by using the factor array 'interval'.
+     * @param   {number} range range of the x-axis.
+     * @param   {number} num   number of ticks.
+     * @returns {number} chosen interval.
+     */
     function ticks(range, num) {
       let start = 1000;
       for (let i = 0; i < interval.length; ++i) {

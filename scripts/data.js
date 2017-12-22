@@ -1,14 +1,28 @@
-! function () {
+'use strict';
+/**
+* Calculates the week of interest (last week) and runs the update method.
+*/
+!function () {
   let now = new Date;
-  let weekago = new Date(now.getTime() - 604800000);
+  let weekago = new Date(now.getTime() - 604800000); //UNIX time of week: 604800000
   update(d2str(weekago), d2str(now));
 }();
 
+/**
+ * Converts date to a string matching the requirements for the weather api on weather-maulburg.de
+ * @param   {object} date Date which sould be converted.
+ * @returns {string} string of date in format dd-mm-yyyy.
+ */
 function d2str(date) {
   return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
 }
 
-function update(dstart, dend, reqest) {
+/**
+ * Fetches data from server. if not possible, data from json.js won't be overwritten. 
+ * @param {string}   dstart date string of start.
+ * @param {string}   dend   date string of end.
+ */
+function update(dstart, dend) {
   let finish = 0;
   let alertBit = 0;
   function initcall() {
@@ -49,6 +63,10 @@ function update(dstart, dend, reqest) {
   xhttpMax.send();
 };
 
+/**
+ * Initializes 2d and 3d diagram as well as maxvalue table and current value.
+ * Called after tyring to fetch data from remote server.
+ */
 function init() {
   diagram2dhandler.init();
   diagram2dhandler.build(0);
@@ -100,6 +118,15 @@ function init() {
   }
 }
 
+/**
+ * Helper function for creating a new table row.
+ * @param   {string} name value name.
+ * @param   {number} min  minimum value.
+ * @param   {number} max  maximum value.
+ * @param   {number} avg  average of the values.
+ * @param   {string} ex   extension (e.g. °C, µSv/h or km/h).
+ * @returns {object} node which represents the row in the DOM.
+ */
 function addTablerow(name, min, max, avg, ex) {
   let node = document.createElement("tr");
   node.innerHTML = `<td>${name}</td><td>${max}${ex}</td><td>${min}${ex}</td><td>${avg}${ex}</td>`;
