@@ -23,7 +23,7 @@ Following tasks were considered:
   - [x] making a table look nice on a mobile device without loosing information
   - [x] general repositioning and changed behaviour of elements
 - [x] History as content
-- [ ] Idea for loading the page faster (e.g. waiting animation)
+- [x] Idea for loading the page faster (e.g. waiting animation)
 
 ## The site in more detail
 The website is a single-page-app (index.html). When this page is loaded, data is requested via ajax from the localhost (127.0.0.1:12346). On this socket, the C# program [ProxyWebServer](./Proxy/ProxyWebServer) listens and forwards the requests the weather server located at http://wetter-maulburg.de and returns the response with a new header to avoid same-origin-policy problems (Workaround). If the local server is not responding (or not started) the website will display [example data](./scripts/json.js) and will show the user that a problem occured (alert message). JavaScript injects the gathered data at specific points in the DOM (table, latest values, diagrams) to build the webpage.
