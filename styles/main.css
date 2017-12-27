@@ -68,7 +68,7 @@ text {
   padding: .5em;
   margin-right: 30px;
   cursor: pointer;
-  transition: all .1s ease-in-out;
+  transition: transform .2s ease-in-out;
   font-size: .5em;
 }
 
@@ -407,6 +407,7 @@ dt {
     height: inherit;
     min-height: 15em;
     visibility: visible;
+    transition: none;
     transform: translateY(0) rotate(0);
     background: #38454b;
   }
@@ -454,10 +455,33 @@ dt {
     right: 1em;
     margin: 0;
     z-index: 1;
-    background: #ccc;
+    background: white;
+    padding: .2em .5em .2em 3em;
+    border: .31em solid #ccc;
+    border-radius: 2em;
+    box-shadow: none;
+    color: #aaa;
+    transition: none;
+  }
+  .rightposition {
+    padding: .2em 3em .2em .5em;
+  }
+  .switcher::before {
+    content: '';
+    width: 2.3em;
+    height: 2.3em;
+    background: #3498db;
+    position: absolute;
+    border-radius: 2em;
+    top: -.4em;
+    left: -.4em;
+    transition: all .3s ease-in-out;
+  }
+  .rightposition::before {
+    transform: translateX(3.1em);
   }
   .switcher:hover {
-    background: #999;
+    transform: scale(1);
   }
   .chart {
     width: 100%;

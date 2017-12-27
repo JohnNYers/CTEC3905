@@ -38,9 +38,10 @@
     document.getElementById("diagram3d").classList.toggle("active");
     if (switcher.innerHTML === "2D") {
       switcher.innerHTML = "3D";
-      
+      switcher.classList.remove("rightposition");
     } else {
       switcher.innerHTML = "2D";
+      switcher.classList.add("rightposition");
     }
   });
 }();
