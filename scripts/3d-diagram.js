@@ -612,7 +612,7 @@ function getshader(gl, id) {
 
 /**
  * Helper function to link shaders to a program.
- * @param   {object} gl  web-l obj.
+ * @param   {object} gl  web-gl obj.
  * @param   {Array}  ids of shaders (e.g. vertex shader and fragment shader).
  * @returns {object} linked program.
  */
