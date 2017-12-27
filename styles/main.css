@@ -9,9 +9,47 @@ h1 {
   font-family: arial;
 }
 
+.invisible {
+  display: none;
+}
+
+.fetching {
+  padding: 0;
+  height: 100vh;
+  min-height: 300px;
+}
+
+.fetching h1 {
+  text-align: center;
+  transform: translateY(calc(50vh - 4em));
+}
+
+.fetching p {
+  display: block;
+  text-align: center;
+  transform:  translateY(calc(50vh + 3em));
+  font-size: 1em;
+}
+
+.fetching::before {
+  content: '';
+  width: 4em;
+  height: 4em;
+  border-radius: 3em;
+  border: .5em solid #ddd;
+  border-top: .5em solid #3498db;
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 2.5em);
+  animation: rotating 1s ease infinite;
+}
+
 header {
   height: 3.5em;
   padding: 1em 2em 0;
+}
+header p{
+  display: none;
 }
 
 .diagram {
@@ -743,5 +781,13 @@ dt {
     display: block;
     width: calc(100% - 2em);
     padding: 1em;
+  }
+}
+@keyframes rotating {
+  0% {
+    transform: rotate(0turn);
+  }
+  100% {
+    transform: rotate(1turn);
   }
 }

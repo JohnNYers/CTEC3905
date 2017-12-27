@@ -12,10 +12,11 @@
 </head>
 
 <body>
-  <header>
+  <header class="fetching">
     <h1>Weather Maulburg</h1>
+    <p id="status">fetching data...</p>
   </header>
-  <section class="diagram">
+  <section class="invisible diagram">
     <nav id="dd">
       <span id="dd-value">Temperature</span>
       <ul>
@@ -52,7 +53,7 @@
       <canvas id="diagram3d" class="chart" width="300" height="300"></canvas>
     </figure>
   </section>
-  <section class="latest-data">
+  <section class="invisible latest-data">
     <h2>latest data
       <time id="last-time">2017-12-22 12:00:26</time>
     </h2>
@@ -149,7 +150,7 @@
       <p> <span class="value"></span> <span>V</span></p>
     </article>
   </section>
-  <section class="max-val">
+  <section class="invisible max-val">
     <h2>Extreme values</h2>
     <table id="max-val-table">
       <tr>
@@ -161,7 +162,7 @@
 
     </table>
   </section>
-  <section class="history">
+  <section class="invisible history">
     <h2>History</h2>
     <article>
       <header>

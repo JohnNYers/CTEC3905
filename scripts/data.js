@@ -68,13 +68,22 @@ function update(dstart, dend) {
  * Called after tyring to fetch data from remote server.
  */
 function init() {
+  let status = document.getElementById("status");
+  let fetching = document.getElementsByClassName("fetching")[0];
+  let sections = Array.from(document.getElementsByClassName("invisible"));
+  
+  status.innerHTML = "calculating...";
   diagram2dhandler.init();
   diagram2dhandler.build(0);
   diagram3dhandler.init();
   diagram3dhandler.draw();
   diagram3dhandler.beginrotate();
   diagram3dhandler.addevents();
-
+  fetching.classList.remove("fetching");
+  
+  for(let i = 0; i < sections.length; ++i) {
+    sections[i].classList.remove("invisible");
+  }
   let time = document.getElementById("last-time");
   let data = d3data[d3data.length - 1];
   time.innerHTML = data.datum;
