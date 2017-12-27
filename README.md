@@ -39,6 +39,9 @@ principle | example
 **Repetition** | see latest data visualization (same styling)
 **Contrast**   | colour separates information
 
+## Development process
+Trial and error has been used for building the solution due to the prototyping characteristic of the project. Therefore the solution might not be as clean and straightforward as possible. 
+
 ## References
 + WebGL:
   + Tutorials and examples at https://developer.mozilla.org/de/docs/Web/API/WebGL_API
