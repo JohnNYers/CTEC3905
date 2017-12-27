@@ -199,10 +199,10 @@ svg {
   fill: black;
 }
 
-article > div {
+p {
   text-align: right;
   font-size: 2em;
-  margin-right: 1em;
+  margin: .5em;
 }
 
 .max-val {
@@ -351,10 +351,6 @@ td:nth-child(4)::before {
   float: right;
   font-size: .7em;
   margin: 2em;
-}
-
-.history p {
-  margin: 1em;
 }
 
 .history img {
@@ -511,7 +507,7 @@ dt {
     border: none;
     font-size: 2em;
   }
-  article > div {
+  p {
     text-align: center;
     margin: .5em 0;
   }
