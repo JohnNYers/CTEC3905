@@ -751,7 +751,7 @@ footer a:hover {
   th {
     width: 25%;
     border-bottom: 2px solid white;
-    background: #0001;
+    background: #00000011;
     padding: .5em;
     font-size: 1.5em;
   }
@@ -777,7 +777,7 @@ footer a:hover {
   }
 
   tr:nth-child(even) {
-    background: #fff3;
+    background: #ffffff33;
   }
 
   tr:nth-child(1) {
