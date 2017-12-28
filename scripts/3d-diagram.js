@@ -448,7 +448,7 @@ let diagram3dhandler = {
       if (timer) clearTimeout(timer);
       touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
       e.preventDefault();
-    });
+    }, {passive: true});
     this.canvas.addEventListener("touchmove", function (e) {
       let dx = e.changedTouches[0].clientX - touchpos[0];
       let dy = e.changedTouches[0].clientY - touchpos[1];
@@ -459,7 +459,7 @@ let diagram3dhandler = {
       that.x = normalize(that.x);
       that.draw();
       e.preventDefault();
-    });
+    }, {passive: true});
     this.canvas.addEventListener("touchend", function (e) {
       timer = setTimeout(function () {
         that.beginrotate();
