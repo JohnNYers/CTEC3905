@@ -425,7 +425,10 @@ let diagram3dhandler = {
 
     this.canvas.addEventListener("mousedown", function () {
       that.endrotate();
-      if (timer) clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       mousedown = true;
     });
     this.canvas.addEventListener("mouseup", function () {
@@ -445,10 +448,13 @@ let diagram3dhandler = {
     let touchpos;
     this.canvas.addEventListener("touchstart", function (e) {
       that.endrotate();
-      if (timer) clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       touchpos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
       e.preventDefault();
-    }, {passive: true});
+    });
     this.canvas.addEventListener("touchmove", function (e) {
       let dx = e.changedTouches[0].clientX - touchpos[0];
       let dy = e.changedTouches[0].clientY - touchpos[1];
@@ -459,7 +465,7 @@ let diagram3dhandler = {
       that.x = normalize(that.x);
       that.draw();
       e.preventDefault();
-    }, {passive: true});
+    });
     this.canvas.addEventListener("touchend", function (e) {
       if(!timer)
         timer = setTimeout(function () {
