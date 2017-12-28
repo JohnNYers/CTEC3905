@@ -426,6 +426,35 @@ dt {
   margin: auto;
 }
 
+footer {
+  background: #24292e;
+  padding: 2em 0;
+}
+footer svg {
+  width: 2em;
+  height: 2em;
+  transform: translateY(.5em);
+}
+footer a {
+  color: #999;
+  fill: #999;
+  transition: all .3s ease-in-out;
+  transition-property: color, fill;
+  display: block;
+  text-align: center;
+}
+footer p {
+  margin: 0;
+  text-align: center;
+  margin: 1em auto 0;
+  font-size: .5em;
+  color: #999;
+}
+footer a:hover{
+  color: #fff;
+  fill: #fff;
+}
+
 @media screen and (min-width: 440px) {
   body {
     font-size: 8px;
@@ -639,6 +668,9 @@ dt {
     display: block;
     width: calc(100% - 2em);
     padding: 1em;
+  }
+  footer {
+    font-size: 2em;
   }
 }
 
