@@ -54,4 +54,5 @@ Trial and error has been used for building the solution due to the prototyping c
 + Algorithms
   + Smooting ideas at https://en.wikipedia.org/wiki/Smoothing
   + Mashing alg. (totally different implementation, tho) idea at https://de.wikipedia.org/wiki/Delaunay-Triangulierung
++ Icon image is developed with GIMP; Favicons are derived automatically with https://realfavicongenerator.net 
 + Smaller seaches (names of functions, parameter order and so on) at https://developer.mozilla.org, https://css-tricks.com/ and https://www.w3schools.com/.
