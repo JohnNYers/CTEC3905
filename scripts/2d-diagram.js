@@ -2,9 +2,9 @@
 
 let diagram2dhandler;
 /**
-* Inits the diagram2dhandler.
-*/
-!function () {
+ * Inits the diagram2dhandler.
+ */
+! function () {
   let diagram = {
     position: {
       x: 0,
@@ -73,13 +73,7 @@ let diagram2dhandler;
     document.getElementById("diagram-path").getElementsByTagName("animate")[0];
   diagram.animArea =
     document.getElementById("diagram-area").getElementsByTagName("animate")[0];
-  diagram.animLine.addEventListener("endEvent", function () {
-    diagram.animLine.setAttribute("from", diagram.animLine.getAttribute("to"));
-  }, false);
-  diagram.animArea.addEventListener("endEvent", function () {
-    diagram.animArea.setAttribute("from", diagram.animArea.getAttribute("to"));
-  }, false);
-
+  
   /**
    * Constructs the value for the time. 
    * Mapping for time values to pixel values in the svg.
@@ -127,15 +121,6 @@ let diagram2dhandler;
       }
 
     }
-    if (this.animLine.beginElement) {
-      let str = "";
-      for (let i = 0; i < this.v.datum.length; ++i) {
-        str += ` ${this.contime(this.v.datum[i])},${this.position.y - this.height/2}`;
-      }
-
-      this.animLine.setAttribute("from", str);
-      this.animArea.setAttribute("from", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
-    }
     this.makeLabels();
   }
 
@@ -150,8 +135,10 @@ let diagram2dhandler;
     for (let i = 0; i < this.v.datum.length; ++i) {
       str += this.con(diagram.v.method[e], i);
     }
-    if (this.animLine.beginElement) {
+    if (document.getElementById("diagram-path").getAttribute("points") === "" || this.animLine.beginElement) {
+      this.animLine.setAttribute("from", document.getElementById("diagram-path").getAttribute("points"));
       this.animLine.setAttribute("to", str);
+      this.animArea.setAttribute("from", document.getElementById("diagram-area").getAttribute("points"));
       this.animArea.setAttribute("to", str + ` ${this.position.x+this.width},${this.position.y}` + ` ${this.position.x},${this.position.y}`);
 
       this.animArea.beginElement();
@@ -188,7 +175,7 @@ let diagram2dhandler;
 
 
 
-  
+
   /**
    * Adds labels to y-axis
    * @param   {number}   e index of measurement array v[].
@@ -199,10 +186,10 @@ let diagram2dhandler;
     }
     let m = diagram.v.method[e];
     /**
-    * Constructs y-axis labels which are convenient (1, 2 or 5er steps)
-    * @param   {number} range maximum range of the y-axis
-    * @returns {number} interval of y ticks (tick(i+1) - tick(i) in local space)
-    */
+     * Constructs y-axis labels which are convenient (1, 2 or 5er steps)
+     * @param   {number} range maximum range of the y-axis
+     * @returns {number} interval of y ticks (tick(i+1) - tick(i) in local space)
+     */
     function ticks(range) {
       let s = 10 ** (Math.floor(Math.log10(range / 10)));
       let interval = [s, 2 * s, 5 * s];
@@ -245,22 +232,22 @@ let diagram2dhandler;
    */
   diagram.makeLabels = function () {
     /*
-    * interval steps for calculating conveninet time interval:
-    * start should be 1000(ms)
-    * ->times 1 => 1 second
-    * ->times 15 => 15 seconds
-    * ->times 2 => 30 seconds
-    * ->times 2 => 1 minute
-    * ->times 15 => 15 minutes
-    * ->times 2 => 30 minutes
-    * ->times 2 => 1 hour
-    * ->times 6 => 6 hours
-    * ->times 2 => 12 hours
-    * ->times 2 => 1 day
-    * ->times 7 => 1 week //should be the last valid number. following only for the sake of completeness
-    * ->times 4 => 1 month (apprx.)
-    * ->times 12 => 1 year (apprx.)
-    */
+     * interval steps for calculating conveninet time interval:
+     * start should be 1000(ms)
+     * ->times 1 => 1 second
+     * ->times 15 => 15 seconds
+     * ->times 2 => 30 seconds
+     * ->times 2 => 1 minute
+     * ->times 15 => 15 minutes
+     * ->times 2 => 30 minutes
+     * ->times 2 => 1 hour
+     * ->times 6 => 6 hours
+     * ->times 2 => 12 hours
+     * ->times 2 => 1 day
+     * ->times 7 => 1 week //should be the last valid number. following only for the sake of completeness
+     * ->times 4 => 1 month (apprx.)
+     * ->times 12 => 1 year (apprx.)
+     */
     let interval = [1, 15, 2,
                   2, 15, 2,
                   2, 6, 2,
