@@ -27,7 +27,7 @@ h1 {
 .fetching p {
   display: block;
   text-align: center;
-  transform:  translateY(calc(50vh + 3em));
+  transform: translateY(calc(50vh + 3em));
   font-size: 1em;
 }
 
@@ -48,7 +48,8 @@ header {
   height: 3.5em;
   padding: 1em 2em 0;
 }
-header p{
+
+header p {
   display: none;
 }
 
@@ -430,11 +431,13 @@ footer {
   background: #24292e;
   padding: 2em 0;
 }
+
 footer svg {
   width: 2em;
   height: 2em;
   transform: translateY(.5em);
 }
+
 footer a {
   color: #999;
   fill: #999;
@@ -443,6 +446,7 @@ footer a {
   display: block;
   text-align: center;
 }
+
 footer p {
   margin: 0;
   text-align: center;
@@ -450,7 +454,8 @@ footer p {
   font-size: .5em;
   color: #999;
 }
-footer a:hover{
+
+footer a:hover {
   color: #fff;
   fill: #fff;
 }
@@ -459,16 +464,19 @@ footer a:hover{
   body {
     font-size: 8px;
   }
+
   header {
     font-size: 1.5em;
     color: white;
     background: #38454b;
   }
+
   #dd {
     padding: 0;
     width: 150px;
     height: 100%;
   }
+
   #dd ul {
     width: inherit;
     height: inherit;
@@ -478,6 +486,7 @@ footer a:hover{
     transform: translateY(0) rotate(0);
     background: #38454b;
   }
+
   #dd li {
     background: #38454b;
     margin: 0;
@@ -491,11 +500,13 @@ footer a:hover{
   #dd ul::before {
     content: none;
   }
+
   #dd .dd-select {
     background: #465155;
     border-left: .2em solid #72c5c0;
     display: block;
   }
+
   .dd-select::after {
     content: '';
     width: 0px;
@@ -505,9 +516,11 @@ footer a:hover{
     border-right: .6em solid #fafafa;
     transform: translateX(1.05em);
   }
+
   #dd-value {
     display: none;
   }
+
   .diagram {
     position: relative;
     background: #fafafa;
@@ -516,6 +529,7 @@ footer a:hover{
     min-height: 30em;
     box-shadow: 0px 1px 40px 5px rgba(0, 0, 0, 0.1);
   }
+
   .switcher {
     position: absolute;
     top: 1em;
@@ -530,9 +544,11 @@ footer a:hover{
     color: #aaa;
     transition: none;
   }
+
   .rightposition {
     padding: .2em 3em .2em .5em;
   }
+
   .switcher::before {
     content: '';
     width: 2.3em;
@@ -544,16 +560,20 @@ footer a:hover{
     left: -.4em;
     transition: all .3s ease-in-out;
   }
+
   .rightposition::before {
     transform: translateX(3.1em);
   }
+
   .switcher:hover {
     transform: scale(1);
   }
+
   .chart {
     width: 100%;
     height: 100%;
   }
+
   figure {
     position: absolute;
     top: 0;
@@ -562,28 +582,34 @@ footer a:hover{
     transform: translateX(150px);
     margin: 0;
   }
+
   .label text {
     font-size: 2.3em;
   }
+
   line {
     stroke-width: 1px;
     stroke: black;
   }
+
   text {
     font-size: 4em;
     fill: black;
   }
+
   h2 {
     margin: 0;
     padding: 1em;
     text-align: center;
     font-size: 5em;
   }
+
   #last-time {
     font-style: normal;
     font-weight: 100;
     font-size: .5em;
   }
+
   .latest-data article {
     position: relative;
     text-align: center;
@@ -592,16 +618,19 @@ footer a:hover{
     margin: 4%;
     color: black;
   }
+
   .latest-data h3 {
     padding: 4em 0 0em;
     margin: 0;
     border: none;
     font-size: 2em;
   }
+
   p {
     text-align: center;
     margin: .5em 0;
   }
+
   .latest-data svg {
     position: absolute;
     width: 3em;
@@ -609,53 +638,62 @@ footer a:hover{
     top: 0;
     left: calc(50% - 1.5em);
   }
+
   .latest-data {
     width: 80%;
     margin: 3em auto;
     max-width: 400px;
   }
 
-
-  
   .history {
     font-size: 2em;
     max-width: 500px;
     margin: auto;
   }
+
   .history h2 {
     font-size: 2.5em;
   }
+
   .history::before {
     left: 3em;
     height: calc(100% - 7em);
     top: 7em;
   }
+
   .history article {
     margin-left: 5em;
   }
+
   .history article::before {
     left: 2.1em;
   }
+
   .history header {
     height: 2em;
   }
+
   .history header::before {
     border: .5em solid transparent;
     border-right: .5em solid #ee4d4d;
     left: 2.4em;
     margin-top: .5em;
   }
+
   .history h3 {
     font-size: 1em;
   }
+
   .history time {
     font-size: .5em;
     margin: 1.5em;
   }
+
   .history .finised {
     margin: 1em;
     background: white;
   }
+
   .history .finised::before {
     border-radius: 2em;
     border: 1.5em solid transparent;
@@ -664,13 +702,19 @@ footer a:hover{
     top: -2em;
     left: .65em;
   }
+
   .finised img {
     display: block;
     width: calc(100% - 2em);
     padding: 1em;
   }
+
   footer {
     font-size: 2em;
+  }
+
+  #dd ul.active {
+    transform: translateY(0px) rotateX(0deg);
   }
 }
 
@@ -683,12 +727,14 @@ footer a:hover{
   .diagram {
     height: calc(100vh - 6.8em);
   }
+
   .max-val {
     margin-top: 5em;
     background: #2ecc71;
     color: white;
     padding-bottom: 5em;
   }
+
   table {
     width: 90%;
     margin: auto;
@@ -697,9 +743,11 @@ footer a:hover{
     border-collapse: collapse;
     box-shadow: 2px 4px 23px 0px rgba(0, 0, 0, 0.3);
   }
+
   tr {
     display: table-row;
   }
+
   th {
     width: 25%;
     border-bottom: 2px solid white;
@@ -707,41 +755,51 @@ footer a:hover{
     padding: .5em;
     font-size: 1.5em;
   }
+
   td {
     display: table-cell;
     max-height: inherit;
     padding: .5em;
     font-size: 1em;
   }
+
   .active td {
     max-height: inherit;
     padding: .5em;
     background: transparent;
   }
+
   td:nth-child(1) {
     max-height: inherit;
     padding: .5em;
     cursor: auto;
     border-top: none;
   }
+
   tr:nth-child(even) {
     background: #fff3;
   }
+
   tr:nth-child(1) {
     display: table-row;
   }
+  
   td::before {
     content: none;
   }
+  
   td:nth-child(1)::after {
     content: none;
   }
+  
   td:nth-child(2)::before {
     content: none;
   }
+  
   td:nth-child(3)::before {
     content: none;
   }
+  
   td:nth-child(4)::before {
     content: none;
   }
@@ -751,56 +809,67 @@ footer a:hover{
   #diagram-path {
     stroke-width: 3px;
   }
+  
   .latest-data {
     min-width: 750px;
   }
+  
   .latest-data article {
     width: 20%;
     margin: 2.3%;
   }
+  
   .history {
     font-size: 2em;
     max-width: 100%;
     margin: auto;
   }
+  
   .history::before {
     left: 50%;
   }
+  
   .history article {
     width: 20em;
     margin-left: calc(50% - 24em);
   }
+  
   .history article::before {
     left: calc(50% - .9em);
   }
+  
   .history article:nth-child(odd) {
     margin-left: calc(50% + 4em);
   }
-  
+
   .history article:nth-child(even) header::before {
     border: .5em solid transparent;
     border-left: .5em solid #ee4d4d;
     left: inherit;
     right: calc(50% + 1.7em);
   }
-  
+
   .history header::before {
     border: .5em solid transparent;
     border-right: .5em solid #ee4d4d;
     left: calc(50% + 1.7em);
     margin-top: .5em;
   }
+  
   .history h3 {
     font-size: 1em;
   }
+  
   .history time {
     font-size: .5em;
     margin: 1.5em;
   }
+  
   .history .finised {
     margin: 4em auto;
     background: white;
   }
+  
   .history .finised::before {
     border-radius: 2em;
     border: 1.5em solid transparent;
@@ -809,16 +878,19 @@ footer a:hover{
     top: -2em;
     left: 8.6em;
   }
+  
   .finised img {
     display: block;
     width: calc(100% - 2em);
     padding: 1em;
   }
 }
+
 @keyframes rotating {
   0% {
     transform: rotate(0turn);
   }
+  
   100% {
     transform: rotate(1turn);
   }

@@ -1,6 +1,7 @@
 # CTEC3905: Front-End-Web dev.
 ## Background
-In 2014 four students and me developed a weather station that is currently in use in Maulburg, Germany. The data is sent to a server that saves it in a database. In this module I decided to develop a website which can display these data (including an unusual 3D chart).
+In 2014 four students and me developed a weather station that is currently in use in Maulburg, Germany. Its data is sent to a server that saves it in a database. In this module I decided to develop a website which can display these data (including an *unusual* 3D visualization).
+
 ## Wireframes and Tasks
 Three versions of the wireframe are availabe in the [Documentation](./Documentation) folder. The latest one is the following [Mobile](./Documentation/V3M.jpg) and [Desktop](./Documentation/V3D.jpg)
 
@@ -41,6 +42,13 @@ principle | example
 
 ## Development process
 Trial and error has been used for building the solution due to the prototyping characteristic of the project. Therefore the solution might not be as clean and straightforward as possible. 
+
+## User testing results
+*only tested on chrome!*
++ **Issue 1:** rotation timer is started more than once if the user touches the diagram with two fingers.
+  + *solution:* only starting the timer if it has a null reference
++ **Issue 2:** animation between data sets (in the 2d diagram) are cancelled when the user switches the values too quickly.
+  + *solution:* overwriting the points attribute when the new value is selected.
 
 ## References
 + WebGL:
