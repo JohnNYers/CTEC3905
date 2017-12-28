@@ -461,9 +461,10 @@ let diagram3dhandler = {
       e.preventDefault();
     }, {passive: true});
     this.canvas.addEventListener("touchend", function (e) {
-      timer = setTimeout(function () {
-        that.beginrotate();
-      }, 3000);
+      if(!timer)
+        timer = setTimeout(function () {
+          that.beginrotate();
+        }, 3000);
     });
   }
 };
