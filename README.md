@@ -1,9 +1,9 @@
 # CTEC3905: Front-End-Web dev.
 ## Background
-In 2014 four students and me developed a weather station that is currently in use in Maulburg, Germany. Its data is sent to a server that saves it in a database. In this module I decided to develop a website which can display these data (including an *unusual* 3D visualization).
+In 2014 four students and I developed a weather station that is currently in use in Maulburg, Germany. Its data is sent to a server that saves it in a database. In this module, I decided to develop a website which can display these data (including an *unusual* 3D visualization).
 
 ## Wireframes and Tasks
-Three versions of the wireframe are availabe in the [Documentation](./Documentation) folder. The latest one is the following [Mobile](./Documentation/V3M.jpg) and [Desktop](./Documentation/V3D.jpg)
+Three versions of the wireframe are available in the [Documentation](./Documentation) folder. The latest one is the following [Mobile](./Documentation/V3M.jpg) and [Desktop](./Documentation/V3D.jpg)
 
 Following tasks were considered:
 - [x] Fetching Data from the server
@@ -19,15 +19,15 @@ Following tasks were considered:
   - [x] write shader programs to colour the vertices
   - [x] include basic matrix multiplications to accomplish rotations according to a user input or automatically after three seconds.
   - [x] include a projection matrix
-  - [x] include labeling and axis
-- [x] Responiveness of the site through CSS
-  - [x] making a table look nice on a mobile device without loosing information
+  - [x] include labelling and axis
+- [x] Responsiveness of the site through CSS
+  - [x] making a table look nice on a mobile device without losing information
   - [x] general repositioning and changed behaviour of elements
 - [x] History as content
 - [x] Idea for loading the page faster (e.g. waiting animation)
 
 ## The site in more detail
-The website is a single-page-app (index.html). When this page is loaded, data is requested via ajax from the localhost (127.0.0.1:12346). On this socket, the C# program [ProxyWebServer](./Proxy/ProxyWebServer) listens and forwards the requests the weather server located at http://wetter-maulburg.de and returns the response with a new header to avoid same-origin-policy problems (Workaround). If the local server is not responding (or not started) the website will display [example data](./scripts/json.js) and will show the user that a problem occured (alert message). JavaScript injects the gathered data at specific points in the DOM (table, latest values, diagrams) to build the webpage.
+The website is a single-page-app (index.html). When this page is loaded, data is requested via ajax from the localhost (127.0.0.1:12346). On this socket, the C# program [ProxyWebServer](./Proxy/ProxyWebServer) listens and forwards the requests the weather server located at http://wetter-maulburg.de and returns the response with a new header to avoid same-origin-policy problems (Workaround). If the local server is not responding (or not started) the website will display [example data](./scripts/json.js) and will show the user that a problem occurred (alert message). JavaScript injects the gathered data at specific points in the DOM (table, latest values, diagrams) to build the webpage.
 
 ## IA
 The webpage leads the user through the weather data in a particular order. Maybe the most important information is the development of the values over time in the last week. This is shown in the 2d and the 3d diagram at the beginning of the page. Followed by the question what the current values are; The next section of the page will provide the answer. Last but not least the table shows the bounds of the values (maximum, minimum and average). 
@@ -41,7 +41,7 @@ principle | example
 **Contrast**   | colour separates information
 
 ## Development process
-Trial and error has been used for building the solution due to the prototyping characteristic of the project. Therefore the solution might not be as clean and straightforward as possible. 
+Trial and error has been used for building the solution due to the prototyping characteristic of the project. Therefore, the solution might not be as clean and straightforward as possible. 
 
 ## User testing results
 *only tested on chrome!*
@@ -60,7 +60,7 @@ Trial and error has been used for building the solution due to the prototyping c
 + CSS
   + Making triangles at https://css-tricks.com/snippets/css/css-triangle/
 + Algorithms
-  + Smooting ideas at https://en.wikipedia.org/wiki/Smoothing
-  + Mashing alg. (totally different implementation, tho) idea at https://de.wikipedia.org/wiki/Delaunay-Triangulierung
+  + Smoothing ideas at https://en.wikipedia.org/wiki/Smoothing
+  + Mashing alg. (totally different implementation, though) idea at https://de.wikipedia.org/wiki/Delaunay-Triangulierung
 + Icon image is developed with GIMP; Favicons are derived automatically with https://realfavicongenerator.net 
-+ Smaller seaches (names of functions, parameter order and so on) at https://developer.mozilla.org, https://css-tricks.com/ and https://www.w3schools.com/.
++ Smaller searches (names of functions, parameter order and so on) at https://developer.mozilla.org, https://css-tricks.com/ and https://www.w3schools.com/.
