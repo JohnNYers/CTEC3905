@@ -2,14 +2,17 @@ body {
   min-width: 344px;
 }
 
-body,
+#dd ul, body,
 h1 {
   padding: 0;
   margin: 0;
-  font-family: arial;
 }
 
-.invisible {
+body {
+  font-family: arial
+}
+
+.invisible, header p {
   display: none;
 }
 
@@ -19,14 +22,12 @@ h1 {
   min-height: 300px;
 }
 
-.fetching h1 {
+.fetching h1, .fetching p {
   text-align: center;
   transform: translateY(calc(50vh - 4em));
 }
 
 .fetching p {
-  display: block;
-  text-align: center;
   transform: translateY(calc(50vh + 3em));
   font-size: 1em;
 }
@@ -49,22 +50,17 @@ header {
   padding: 1em 2em 0;
 }
 
-header p {
-  display: none;
-}
-
 .diagram {
   width: 100%;
   height: 450px;
   background: #0074D9;
 }
 
-.chart.active {
+.chart.active, .fetching p {
   display: block;
 }
 
 figure {
-  display: block;
   margin: 30px;
 }
 
@@ -143,8 +139,6 @@ text {
 #dd ul {
   position: absolute;
   list-style-type: none;
-  margin: 0;
-  padding: 0;
   visibility: hidden;
   background: white;
   transition: transform 0.3s ease-in-out;
@@ -154,8 +148,8 @@ text {
 
 #dd ul::before {
   content: '';
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   top: -40px;
   left: 40px;
   position: absolute;
@@ -164,7 +158,7 @@ text {
 }
 
 #dd li {
-  background: #0060B1;
+  background: #0060b1;
   padding: .5em 1em;
   margin: 2px;
   cursor: pointer;
@@ -181,11 +175,6 @@ text {
 h2 {
   font-style: italic;
   margin-left: 1em;
-}
-
-h3 {
-  font-size: 2em;
-  padding: 1em .5em 0;
 }
 
 #last-time {
@@ -238,9 +227,12 @@ svg {
   fill: black;
 }
 
+p, table {
+  font-size: 2em;
+}
+
 p {
   text-align: right;
-  font-size: 2em;
   margin: .5em;
 }
 
@@ -253,7 +245,6 @@ p {
 
 table {
   width: 100%;
-  font-size: 2em;
 }
 
 table,
@@ -328,13 +319,16 @@ td:nth-child(4)::before {
   position: relative;
 }
 
-.history::before {
+.history::before, article::before {
   content: '';
   position: absolute;
+  background: #ee4d4d;
+}
+
+.history::before {
   display: block;
   height: calc(100% - 2em);
   width: .2em;
-  background: #ee4d4d;
   left: 2em;
   top: 2em;
 }
@@ -348,14 +342,11 @@ td:nth-child(4)::before {
 }
 
 .history article::before {
-  content: '';
   z-index: 0;
   box-sizing: border-box;
-  position: absolute;
   width: 2em;
   height: 2em;
   border-radius: 1em;
-  background: #ee4d4d;
   left: 1.1em;
   margin-top: .5em;
 }
@@ -438,13 +429,16 @@ footer svg {
   transform: translateY(.5em);
 }
 
-footer a {
+footer a, footer p {
   color: #999;
+  text-align: center;
+}
+
+footer a {
   fill: #999;
   transition: all .3s ease-in-out;
   transition-property: color, fill;
   display: block;
-  text-align: center;
 }
 
 footer p {
@@ -468,7 +462,6 @@ footer a:hover {
   header {
     font-size: 1.5em;
     color: white;
-    background: #38454b;
   }
 
   #dd {
@@ -487,8 +480,10 @@ footer a:hover {
     background: #38454b;
   }
 
-  #dd li {
+  #dd li, #dd ul, header {
     background: #38454b;
+  }
+  #dd li {
     margin: 0;
     border-left: .2em solid transparent;
   }
@@ -622,7 +617,7 @@ footer a:hover {
   .latest-data h3 {
     padding: 4em 0 0em;
     margin: 0;
-    border: none;
+    border: 0;
     font-size: 2em;
   }
 
@@ -784,22 +779,10 @@ footer a:hover {
     display: table-row;
   }
   
-  td::before {
-    content: none;
-  }
-  
-  td:nth-child(1)::after {
-    content: none;
-  }
-  
-  td:nth-child(2)::before {
-    content: none;
-  }
-  
-  td:nth-child(3)::before {
-    content: none;
-  }
-  
+  td::before, 
+  td:nth-child(1)::after, 
+  td:nth-child(2)::before, 
+  td:nth-child(3)::before, 
   td:nth-child(4)::before {
     content: none;
   }
