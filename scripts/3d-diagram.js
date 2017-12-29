@@ -423,7 +423,8 @@ let diagram3dhandler = {
     let that = this;
     let timer;
 
-    this.canvas.addEventListener("mousedown", function () {
+    this.canvas.addEventListener("mousedown", function (e) {
+      if(e.which !== 1) return;
       that.endrotate();
       if (timer) {
         clearTimeout(timer);
@@ -431,7 +432,8 @@ let diagram3dhandler = {
       }
       mousedown = true;
     });
-    this.canvas.addEventListener("mouseup", function () {
+    this.canvas.addEventListener("mouseup", function (e) {
+      if(e.which !== 1) return;
       timer = setTimeout(function () {
         that.beginrotate();
       }, 3000);
