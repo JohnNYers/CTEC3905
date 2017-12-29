@@ -135,7 +135,7 @@ let diagram2dhandler;
     for (let i = 0; i < this.v.datum.length; ++i) {
       str += this.con(diagram.v.method[e], i);
     }
-    if (document.getElementById("diagram-path").getAttribute("points") === "" || this.animLine.beginElement) {
+    if (document.getElementById("diagram-path").getAttribute("points") !== "" || this.animLine.beginElement) {
       this.animLine.setAttribute("from", document.getElementById("diagram-path").getAttribute("points"));
       this.animLine.setAttribute("to", str);
       this.animArea.setAttribute("from", document.getElementById("diagram-area").getAttribute("points"));
