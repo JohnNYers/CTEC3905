@@ -44,6 +44,7 @@ principle | example
 Trial and error has been used for building the solution due to the prototyping characteristic of the project. Therefore, the solution might not be as clean and straightforward as possible. 
 
 ## User testing results
+Tested by Matze (https://youtu.be/iRKFaCwHhQo)
 *only tested on chrome!*
 + **Issue 1:** rotation timer is started more than once if the user touches the diagram with two fingers.
   + *solution:* only starting the timer if it has a null reference
