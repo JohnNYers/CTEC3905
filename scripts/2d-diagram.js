@@ -109,7 +109,7 @@ let diagram2dhandler;
    */
   diagram.init = function () {
     for (let i = 0; i < d3data.length; ++i) {
-      let date = new Date(d3data[i].datum).getTime();
+      let date = new Date(d3data[i].datum.replace(' ', 'T')).getTime();
       diagram.v.datum[i] = date;
       if (diagram.v.dmax < date) diagram.v.dmax = date;
       if (diagram.v.dmin > date) diagram.v.dmin = date;
