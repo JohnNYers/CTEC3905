@@ -125,7 +125,7 @@ function parse3d() {
       this.max = 0
   }
   numbervalues = 7;
-  let otime = new Date(d3data[0].datum).getTime();
+  let otime = new Date(d3data[0].datum.replace(' ', 'T')).getTime();
 
   let p = [];
   let bounds = [];
@@ -133,12 +133,12 @@ function parse3d() {
     bounds[i] = new Bound();
   }
   for (let i = 0; i < d3data.length; ++i) {
-    let tdif = new Date(d3data[i].datum).getTime() - otime;
+    let tdif = new Date(d3data[i].datum.replace(' ', 'T')).getTime() - otime;
     let index = parseInt(tdif / 86400000);
 
     if (!p[index]) {
       p[index] = [[], [[], [], [], [], [], [], []]];
-      diagram3dhandler.days[index] = new Date(d3data[i].datum);
+      diagram3dhandler.days[index] = new Date(d3data[i].datum.replace(' ', 'T'));
     }
     p[index][0].push(tdif % 86400000 / 86400000 - 0.5);
 
